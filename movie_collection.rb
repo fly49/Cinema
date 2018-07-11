@@ -33,8 +33,5 @@ class MovieCollection
              .each_with_object(Hash.new(0)) { |d, hash| hash[d] += 1 }
              .sort_by{ |k,v| v }.reverse.to_h
   end
-<<<<<<< HEAD
+
 end
-=======
-end
->>>>>>> 5c5331f688168b9b733a0da8455a5977862804bc
