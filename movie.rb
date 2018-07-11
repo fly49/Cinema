@@ -30,4 +30,8 @@ class Movie
     end
   end
   
+<<<<<<< HEAD
 end
+=======
+end
+>>>>>>> 5c5331f688168b9b733a0da8455a5977862804bc
