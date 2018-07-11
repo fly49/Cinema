@@ -29,8 +29,6 @@ begin
   puts collection.all.first.has_genre?('Ccomdy')
   rescue StandardError => error
     puts "Sorry! #{error.message}"
-<<<<<<< HEAD
+
 end
-=======
-end
->>>>>>> 5c5331f688168b9b733a0da8455a5977862804bc
+
