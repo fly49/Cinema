@@ -1,8 +1,8 @@
 require 'csv'
 require 'date'
-require_relative 'Movie'
+require_relative 'movie'
 
-class MovieCollection
+class movie_collection
   
   def initialize(name)
     abort("File doesn't exist!") unless File.file?(name)
