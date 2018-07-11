@@ -1,4 +1,4 @@
-require_relative 'MovieCollection'
+require_relative 'movie_collection'
 
 collection = MovieCollection.new('movies.txt')
 
