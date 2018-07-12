@@ -22,7 +22,7 @@ puts collection.filter(year: 2001..2009)
 puts collection.filter(genre: 'Comedy')
 puts collection.filter(cast: /Schwarz(.*)/)
 puts "combined filtering"
-puts collection.filter(genre: 'Drama', year: 1965..1975)
+puts collection.filter(genre: 'Adventure', year: 2000..2005)
 
 puts "Exception test:"
 begin
