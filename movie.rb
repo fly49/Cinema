@@ -1,8 +1,8 @@
 class Movie
   attr_reader :link, :title, :year, :country, :date, :genre, :duration, :rating, :director, :cast
-  GENRES = %w( Adventure Comedy Drama Fantasy Crime Thriller Biography Action)
   
-  def initialize(params)
+  def initialize(params, collection)
+    @collection = collection
     params.each do |key, value|
       instance_variable_set("@#{key}", value)
     end
@@ -33,7 +33,8 @@ class Movie
   end
 
   def has_genre?(str)
-    GENRES.include?(str) ? @genre.include?(str) : raise("Incorrect genre!")
+    raise("Incorrect genre!") unless @collection.genres.include?(str)
+    @genre.include?(str)
   end
   
 end

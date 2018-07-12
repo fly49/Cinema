@@ -3,11 +3,13 @@ require 'date'
 require_relative 'movie'
 
 class MovieCollection
+  attr_reader :genres
   TABLE = %w[ link title year country date genre duration rating director cast ]
   
   def initialize(name)
     raise("File doesn't exist!") unless File.file?(name)
-    @database = CSV.read(name, col_sep:'|', :headers => TABLE).map {|a| Movie.new(a.to_h)}
+    @database = CSV.read(name, col_sep:'|', :headers => TABLE).map {|a| Movie.new(a.to_h, self)}
+    @genres = @database.reduce([]) { |g, film| g << film.genre }.flatten.uniq
   end
   
   def all
@@ -20,17 +22,15 @@ class MovieCollection
   end 
   
   def filter(hash)
-    f_data = @database.clone
-    hash.each do |key, val|
-      raise("Wrong param!") unless f_data[0].respond_to?(key)
-      f_data.select! { |film| Array(film.send(key)).any? { |i| val === i } }
+    hash.reduce(0) do |f_data, (key, val)|
+      raise("Wrong param!") unless @database[0].respond_to?(key)
+      f_data = @database.select { |film| Array(film.send(key)).any? { |i| val === i } }.first(5)
     end
-    return f_data.first(5)
   end
   
   def stats(param)
     raise("Wrong param!") unless @database[0].respond_to?(param)
-    @database.map(&param).flatten
+    @database.flat_map(&param)
              .each_with_object(Hash.new(0)) { |d, hash| hash[d] += 1 }
              .sort_by{ |k,v| v }.reverse.to_h
   end
