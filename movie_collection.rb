@@ -20,16 +20,17 @@ class MovieCollection
   end 
   
   def filter(hash)
-    p hash
-    att = hash.keys[0]; val = hash.values[0]
-    raise("Wrong param!") unless @database[0].respond_to?(att)
-    val = Regexp.new("#{val}(.*)") if val.respond_to?(:to_str)
-    @database.select { |film| val === film.send(att) }.first(5)
+    f_data = @database.clone
+    hash.each do |key, val|
+      raise("Wrong param!") unless f_data[0].respond_to?(key)
+      f_data.select! { |film| Array(film.send(key)).any? { |i| val === i } }
+    end
+    return f_data.first(5)
   end
   
   def stats(param)
     raise("Wrong param!") unless @database[0].respond_to?(param)
-    @database.map{ |d| d.send(param).split(',') }.flatten
+    @database.map(&param).flatten
              .each_with_object(Hash.new(0)) { |d, hash| hash[d] += 1 }
              .sort_by{ |k,v| v }.reverse.to_h
   end

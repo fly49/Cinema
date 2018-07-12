@@ -19,15 +19,21 @@ class Movie
   def duration
     @duration.chomp(" min").to_i
   end 
+  
+  def genre
+    @genre.split(",")
+  end
+  
+  def cast
+    @cast.split(",")
+  end
+  
+  def year
+    @year.to_i
+  end
 
   def has_genre?(str)
-    if @genre.include?(str)
-      return true
-    elsif GENRES.include?(str)
-      return false
-    else
-      raise "Incorrect genre!"
-    end
+    GENRES.include?(str) ? @genre.include?(str) : raise("Incorrect genre!")
   end
   
 end
