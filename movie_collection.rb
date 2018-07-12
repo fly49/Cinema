@@ -22,7 +22,7 @@ class MovieCollection
   end 
   
   def filter(hash)
-    hash.reduce(0) do |f_data, (key, val)|
+    hash.reduce([]) do |f_data, (key, val)|
       raise("Wrong param!") unless @database[0].respond_to?(key)
       f_data = @database.select { |film| Array(film.send(key)).any? { |i| val === i } }.first(5)
     end
