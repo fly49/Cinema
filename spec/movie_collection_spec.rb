@@ -10,7 +10,7 @@ describe MovieCollection do
     
     context "wrong param" do
       it "returns error" do
-        expect(@collection.sort_by(:soundtrack)).to eql("Wrong param!")
+        expect(@collection.sort_by(:soundtrack)).to raise_error("Wrong param!")
       end
     end
     
