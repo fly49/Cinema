@@ -1,69 +1,26 @@
 Layout/BlockEndNewline:
-  Enabled: false
-
-Layout/EmptyLinesAroundBeginBody:
-  Enabled: true
+  Exclude:
+    - 'spec/**/*'
 
 # SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines, beginning_only, ending_only
 Layout/EmptyLinesAroundClassBody:
   EnforcedStyle: no_empty_lines
 
-# Configuration parameters: AllowForAlignment, ForceEqualSignAlignment.
-Layout/ExtraSpacing:
-  Enabled: true
-
 Layout/MultilineBlockLayout:
-  Enabled: false
-
-Layout/RescueEnsureAlignment:
-  Enabled: false
-
-Layout/SpaceAfterColon:
-  Enabled: false
+  Exclude:
+    - 'spec/**/*'
 
 Layout/SpaceAfterComma:
   Enabled: false
 
-# Configuration parameters: AllowForAlignment.
-Layout/SpaceAroundOperators:
-  Enabled: false
-
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces.
-# SupportedStyles: space, no_space
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceBeforeBlockBraces:
-  Enabled: false
-
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
-# SupportedStyles: space, no_space
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceInsideBlockBraces:
-  Enabled: false
-
-# Configuration parameters: EnforcedStyleForEmptyBraces.
-# SupportedStyles: space, no_space, compact
-# SupportedStylesForEmptyBraces: space, no_space
 Layout/SpaceInsideHashLiteralBraces:
   EnforcedStyle: space
 
 Layout/SpaceInsidePercentLiteralDelimiters:
   EnforcedStyle: space
 
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: final_newline, final_blank_line
 Layout/TrailingBlankLines:
   Enabled: false
-
-# Configuration parameters: AllowInHeredoc.
-Layout/TrailingWhitespace:
-  Enabled: true
-
-Lint/DuplicateMethods:
-  Enabled: false
-
-# Configuration parameters: IgnoreEmptyBlocks, AllowUnusedKeywordArguments.
-Lint/UnusedBlockArgument:
-  Enabled: true
 
 # Configuration parameters: CountComments, ExcludedMethods.
 # ExcludedMethods: refine
@@ -71,14 +28,6 @@ Metrics/BlockLength:
   Max: 66
   Exclude:
     - 'spec/**/*'
-
-# Configuration parameters: NamePrefix, NamePrefixBlacklist, NameWhitelist, MethodDefinitionMacros.
-# NamePrefix: is_, has_, have_
-# NamePrefixBlacklist: is_, has_, have_
-# NameWhitelist: is_a?
-# MethodDefinitionMacros: define_method, define_singleton_method
-Naming/PredicateName:
-  Enabled: false
 
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: braces, no_braces, context_dependent
@@ -90,34 +39,7 @@ Style/BracesAroundHashParameters:
 Style/CaseEquality:
   Enabled: false
 
-Style/Documentation:
-  Enabled: true
-
-# Configuration parameters: EnforcedStyle, UseHashRocketsWithSymbolValues, PreferHashRocketsForNonAlnumEndingSymbols.
-# SupportedStyles: ruby19, hash_rockets, no_mixed_keys, ruby19_no_mixed_keys
-Style/HashSyntax:
-  EnforcedStyle: no_mixed_keys
-
-Style/MutableConstant:
-  Enabled: true
-
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  EnforcedStyle: double_quotes
-
-# Configuration parameters: IgnoredMethods.
-# IgnoredMethods: respond_to, define_method
-Style/SymbolProc:
-  Enabled: true
-
-# Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
-# URISchemes: http, https
 Metrics/LineLength:
-  Max: 185
-  
-Style/RegexpLiteral:
-  Enabled: false
-  
-Style/BlockDelimiters:
-  EnforcedStyle: braces_for_chaining
+  Max: 120
+  Exclude:
+    - 'spec/**/*'
