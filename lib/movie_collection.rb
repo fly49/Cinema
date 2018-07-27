@@ -9,12 +9,23 @@ class MovieCollection
 
   def initialize(name)
     raise("File doesn't exist!") unless File.file?(name)
-    @database = CSV.read(name, col_sep: '|', headers: TABLE).map { |a| Movie.new(a.to_h, self) }
+    @database = CSV.read(name, col_sep: '|', headers: TABLE).map { |a| Movie.create(a, self) }
     @genres = @database.reduce([]) { |g, film| g << film.genre }.flatten.uniq
   end
 
   def all
     @database
+  end
+  
+  def find(name)
+    @database.find { |f| f.title == name } || raise("Movie not found!")
+  end
+  
+  def show(name)
+    movie = find(name)
+    t_s = Time.now.strftime("%H:%M")
+    t_end = (Time.now + movie.duration*60).strftime("%H:%M")
+    puts "Now showing: «#{movie.title}» #{t_s} - #{t_end}"
   end
 
   def sort_by(param)

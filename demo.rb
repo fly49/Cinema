@@ -32,3 +32,7 @@ begin
 rescue StandardError => error
   puts "Sorry! #{error.message}"
 end
+
+puts collection.find("Finding Nem")
+#TABLE = %w[link title year country date genre duration rating director cast].freeze
+#p CSV.read("movies.txt", col_sep: '|', headers: TABLE).map{ |a| a.to_h }

@@ -15,14 +15,14 @@ describe MovieCollection do
       it { expect { subject.sort_by(:soundtrack) }.to raise_error(RuntimeError,'Wrong param!') }
     end
     context 'Date sorting' do
-      it {  expect(subject.sort_by(:date).first(3).map(&:to_s)).to eq(['The Kid (1921-02-06; Comedy,Drama,Family) - 68 min',
-                                                                       'The Gold Rush (1925; Adventure,Comedy,Drama) - 95 min',
-                                                                       'The General (1927-02-24; Action,Adventure,Comedy) - 67 min'])}
+      it {  expect(subject.sort_by(:date).first(3).map(&:to_s)).to eq(['«The Kid» - Old Movie (1921).',
+                                                                       '«The Gold Rush» - Old Movie (1925).',
+                                                                       '«The General» - Old Movie (1926).'])}
     end
     context 'Duration sorting' do
-      it {  expect(subject.sort_by(:duration).first(3).map(&:to_s)).to eq(['The General (1927-02-24; Action,Adventure,Comedy) - 67 min',
-                                                                           'The Kid (1921-02-06; Comedy,Drama,Family) - 68 min',
-                                                                           'Before Sunset (2004-07-30; Drama,Romance) - 80 min'])}
+      it {  expect(subject.sort_by(:duration).first(3).map(&:to_s)).to eq(['«The General» - Old Movie (1926).',
+                                                                           '«The Kid» - Old Movie (1921).',
+                                                                           '«Before Sunset» - Brand-new Movie! Released 14 year ago.'])}
     end
   end
 
@@ -65,6 +65,15 @@ describe MovieCollection do
     end
     context 'Combined filtering' do
       it { expect(subject.filter(genre: 'Animation', year: 2000..2005)).to all(have_attributes(genre: include('Animation'), year: 2001..2005)) }
+    end
+  end
+  
+  describe '.find' do
+    context 'Wrong name' do
+      it { expect { subject.find('abcd') }.to raise_error(RuntimeError,'Movie not found!') }
+    end
+    context 'Right format' do
+      it { expect(subject.find('The Matrix')).to be_a Movie }
     end
   end
 end

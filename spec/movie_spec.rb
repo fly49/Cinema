@@ -17,7 +17,7 @@ describe Movie do
   subject { Movie.new(data, dbl) }
 
   describe 'it has been instantiated' do
-    its(:link) { is_expected.to match(%r{ imdb.com\/title(.*) }) }
+    its(:link) { is_expected.to match(%r{imdb.com\/title(.*)}) }
     its(:title, :country, :rating, :director, :month) { are_expected.to be_a(String) }
     its(:year, :duration) { are_expected.to be_a(Integer) }
     its(:genre, :cast) { are_expected.to be_a(Array) }
