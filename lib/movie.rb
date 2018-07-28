@@ -1,10 +1,10 @@
 # Movie contains information about specific movie and provides it in convinient form.
 class Movie
   attr_reader :link, :title, :country, :date, :director
-  
+
   def self.create(array, collection)
     data = array.to_h
-    case data["year"].to_i
+    case data['year'].to_i
     when 1900..1945
       AncientMovie.new(data, collection)
     when 1945..1968
@@ -46,11 +46,11 @@ class Movie
   def year
     @year.to_i
   end
-  
+
   def rating
     @rating.to_f
   end
-  
+
   def period
     self.class.name.chomp('Movie').downcase.to_sym
   end
@@ -71,8 +71,8 @@ end
 
 class ClassicMovie < Movie
   def to_s
-    count = @collection.stats(:director).select { |key| key == @director }.values.first
-    "«#{@title}» - Classic Movie, director: #{@director} (#{count} more movie#{ count > 1 ? "":"s" } in the list)."
+    count = @collection.stats(:director).fetch(@director)
+    "«#{@title}» - Classic Movie, director: #{@director} (#{count} more movie#{count > 1 ? '' : 's'} in the list)."
   end
 end
 
@@ -84,7 +84,7 @@ end
 
 class NewMovie < Movie
   def to_s
-    years = Date::today.year - @year.to_i
-    "«#{@title}» - Brand-new Movie! Released #{years} year#{ years > 1 ? "":"s" } ago."
+    years = Date.today.year - @year.to_i
+    "«#{@title}» - Brand-new Movie! Released #{years} year#{years > 1 ? '' : 's'} ago."
   end
 end

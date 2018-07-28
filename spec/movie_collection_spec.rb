@@ -67,7 +67,7 @@ describe MovieCollection do
       it { expect(subject.filter(genre: 'Animation', year: 2000..2005)).to all(have_attributes(genre: include('Animation'), year: 2001..2005)) }
     end
   end
-  
+
   describe '.find' do
     context 'Wrong name' do
       it { expect { subject.find('abcd') }.to raise_error(RuntimeError,'Movie not found!') }

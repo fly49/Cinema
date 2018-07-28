@@ -1,16 +1,20 @@
 require_relative 'movie_collection'
 
 class Theatre < MovieCollection
-  SCHEDULE = { morning: { period: [:ancient] }, noon: { genre: ["Adventure",'Comedy'] }, evening: { genre: ['Drama','Horror'] } }
-    
+  SCHEDULE = { morning: { period: :ancient },
+               noon: { genre: /(Adventure|Comedy)/ },
+               evening: { genre: /(Drama|Horror)/ },
+               special: { genre: /(Comedy|Drama)/, cast: /Al Pacino/ } }.freeze
+
   def show(time)
-    key, value = SCHEDULE[time].first
-    self.filter( Hash[key,value.sample] ).sample
+    raise('Incorrect time!') if SCHEDULE[time].nil?
+    filter(SCHEDULE[time]).max_by { |m| m.rating * rand }
   end
+
   def when?(name)
-    SCHEDULE.each do |time, _hash|
+    SCHEDULE.find do |time, _hash|
       key, value = SCHEDULE[time].first
-      return time if Array(self.find(name).send(key)).any? { |val| value.include?(val) }
-    end
+      Array(find(name).send(key)).any? { |i| value === i }
+    end.first
   end
 end
