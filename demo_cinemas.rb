@@ -11,3 +11,6 @@ netflix.show(genre: 'Drama', period: :classic, country: 'France')
 
 theatre.show(:special)
 #puts theatre.when?('The Kid')
+table = %w[link title year country date genre duration rating director cast]
+p 'http://imdb.com/title/tt0034583/?ref_=chttp_tt_32|Casablanca|1942|USA|1943-01-23|Drama,Romance,War|102 min|8.6|Michael Curtiz|Humphrey Bogart,Ingrid Bergman,Paul Henreid'.split('|')
+.zip(table).to_h#.flatten.to_h
