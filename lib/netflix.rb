@@ -1,5 +1,4 @@
 require_relative 'movie_collection'
-require_relative 'fitness_selection'
 
 class Netflix < MovieCollection
   attr_reader :account
