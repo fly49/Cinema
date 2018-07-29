@@ -41,26 +41,53 @@ describe Movie do
 end
 
 describe "specified movies" do
-  let(:table) { %w[link title year country date genre duration rating director cast] }
-  let(:ancient_movie_data) do 
-    data = 'http://imdb.com/title/tt0034583/?ref_=chttp_tt_32|Casablanca|1942|USA|1943-01-23|Drama,Romance,War|102 min|8.6|Michael Curtiz|Humphrey Bogart,Ingrid Bergman,Paul Henreid'
-           .split('|')
-    table.zip(data)
+  let(:ancient_movie_data) do
+    { link: 'http://imdb.com/title/tt0034583/?ref_=chttp_tt_32',
+      title: 'Casablanca',
+      year: '1942',
+      country: 'USA',
+      date: '1943-01-23',
+      genre: 'Drama,Romance,War',
+      duration: '102 min',
+      rating: '8.6',
+      director: 'Michael Curtiz',
+      cast: 'Humphrey Bogart,Ingrid Bergman,Paul Henreid' }
   end
-  let(:classic_movie_data) do 
-    data = 'http://imdb.com/title/tt0047478/?ref_=chttp_tt_20|Seven Samurai|1954|Japan|1956-11-19|Drama|207 min|8.7|Akira Kurosawa|Toshirô Mifune,Takashi Shimura,Keiko Tsushima'
-           .split('|')
-    table.zip(data)
+  let(:classic_movie_data) do
+    { link: 'http://imdb.com/title/tt0047478/?ref_=chttp_tt_20',
+      title: 'Seven Samurai',
+      year: '1954',
+      country: 'Japan',
+      date: '1956-11-19',
+      genre: 'Drama',
+      duration: '207 min',
+      rating: '8.7',
+      director: 'Akira Kurosawa',
+      cast: 'Toshirô Mifune,Takashi Shimura,Keiko Tsushima' }
   end
-  let(:modern_movie_data) do 
-    data = 'http://imdb.com/title/tt0114369/?ref_=chttp_tt_22|Se7en|1995|USA|1995-09-22|Drama,Mystery,Thriller|127 min|8.6|David Fincher|Morgan Freeman,Brad Pitt,Kevin Spacey'
-           .split('|')
-    table.zip(data)
+  let(:modern_movie_data) do
+    { link: 'http://imdb.com/title/tt0114369/?ref_=chttp_tt_22',
+      title: 'Se7en',
+      year: '1995',
+      country: 'USA',
+      date: '1995-09-22',
+      genre: 'Drama,Mystery,Thriller',
+      duration: '127 min',
+      rating: '8.6',
+      director: 'David Fincher',
+      cast: 'Morgan Freeman,Brad Pitt,Kevin Spacey' }
   end
-  let(:new_movie_data) do 
-    data = 'http://imdb.com/title/tt2096673/?ref_=chttp_tt_53|Inside Out|2015|USA|2015-06-19|Animation,Adventure,Comedy|94 min|8.6|Pete Docter|Amy Poehler,Bill Hader,Lewis Black'
-           .split('|')
-    table.zip(data)
+  let(:new_movie_data) do
+    { link: 'http://imdb.com/title/tt2096673/?ref_=chttp_tt_53',
+      title: 'Inside Out',
+      year: '2015',
+      country: 'USA',
+      date: '2015-06-19',
+      genre: 'Animation,Adventure,Comedy',
+      duration: '94 min',
+      rating: '8.6',
+      director: 'Pete Docter',
+      cast: 'Amy Poehler,Bill Hader,Lewis Black' }
   end
   let(:dbl) { double(MovieCollection.new('movies.txt')) }
   let(:ancient_movie) { Movie.create(ancient_movie_data, dbl) }

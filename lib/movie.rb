@@ -2,17 +2,16 @@
 class Movie
   attr_reader :link, :title, :country, :date, :director
 
-  def self.create(array, collection)
-    data = array.to_h
-    case data['year'].to_i
+  def self.create(hash, collection)
+    case hash[:year].to_i
     when 1900..1945
-      AncientMovie.new(data, collection)
+      AncientMovie.new(hash, collection)
     when 1945..1968
-      ClassicMovie.new(data, collection)
+      ClassicMovie.new(hash, collection)
     when 1968..2000
-      ModernMovie.new(data, collection)
+      ModernMovie.new(hash, collection)
     else
-      NewMovie.new(data, collection)
+      NewMovie.new(hash, collection)
     end
   end
 

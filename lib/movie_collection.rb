@@ -5,11 +5,11 @@ require_relative 'movie'
 # MovieCollection contains information about top-250 imdb movies and allow to choose specific ones in different ways.
 class MovieCollection
   attr_reader :genres
-  TABLE = %w[link title year country date genre duration rating director cast].freeze
+  TABLE = %I[link title year country date genre duration rating director cast].freeze
 
   def initialize(name)
     raise("File doesn't exist!") unless File.file?(name)
-    @database = CSV.read(name, col_sep: '|', headers: TABLE).map { |a| Movie.create(a, self) }
+    @database = CSV.read(name, col_sep: '|', headers: TABLE).map { |a| Movie.create(a.to_hash, self) }
     @genres = @database.flat_map(&:genre).uniq
   end
 

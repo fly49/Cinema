@@ -44,6 +44,10 @@ describe Netflix do
         its(:period) { is_expected.to eq(:classic) }
         its(:country) { is_expected.to include('France') }
       end
+      it 'should print a message' do
+        time = Regexp.new(/([0-1][0-9]|[2][0-3]):[0-5][0-9]/)
+        expect { netflix.show(movie_params) }.to output(/Now showing: «(.*?)» #{time} - #{time}/).to_stdout
+      end
     end
   end
 end
