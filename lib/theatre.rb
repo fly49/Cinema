@@ -7,8 +7,9 @@ class Theatre < MovieCollection
                special: { genre: /(Comedy|Drama)/, cast: /Al Pacino/ } }.freeze
 
   def show(time)
-    raise('Incorrect time!') if SCHEDULE[time].nil?
-    filter(SCHEDULE[time]).max_by { |m| m.rating * rand }
+    raise('Incorrect time!') unless SCHEDULE.key?(time)
+    movie = filter(SCHEDULE[time]).max_by { |m| m.rating * rand }
+    super movie
   end
 
   def when?(name)

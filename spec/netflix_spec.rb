@@ -39,7 +39,7 @@ describe Netflix do
         expect { netflix.show(movie_params) }.to change { netflix.account }.by(-1.5)
       end
       context 'returned movie should have pre-setted params' do
-        subject { netflix.show(movie_params) }
+        subject { netflix.show(movie_params)  }
         its(:genre) { is_expected.to include('Drama') }
         its(:period) { is_expected.to eq(:classic) }
         its(:country) { is_expected.to include('France') }

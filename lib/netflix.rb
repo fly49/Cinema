@@ -23,6 +23,6 @@ class Netflix < MovieCollection
     movie = filter(hash).max_by { |m| m.rating * rand }
     raise('Not enough funds!') if @account < how_much?(movie.title)
     @account -= how_much?(movie.title)
-    movie
+    super movie
   end
 end

@@ -21,11 +21,11 @@ class MovieCollection
     @database.find { |f| f.title == name } || raise('Movie not found!')
   end
 
-  def show(name)
-    movie = find(name)
+  def show(movie)
     start_at = Time.now.strftime('%H:%M')
     end_at = (Time.now + movie.duration * 60).strftime('%H:%M')
     puts "Now showing: «#{movie.title}» #{start_at} - #{end_at}"
+    movie
   end
 
   def sort_by(param)
