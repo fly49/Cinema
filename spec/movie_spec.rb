@@ -40,7 +40,7 @@ describe Movie do
   end
 end
 
-describe "specified movies" do
+describe 'specified movies' do
   let(:ancient_movie_data) do
     { link: 'http://imdb.com/title/tt0034583/?ref_=chttp_tt_32',
       title: 'Casablanca',
@@ -94,17 +94,17 @@ describe "specified movies" do
   let(:classic_movie) { Movie.create(classic_movie_data, dbl) }
   let(:modern_movie) { Movie.create(modern_movie_data, dbl) }
   let(:new_movie) { Movie.create(new_movie_data, dbl) }
-  
+
   it 'has been instantiated as specified movie' do
     expect(ancient_movie).to be_a AncientMovie
     expect(classic_movie).to be_a ClassicMovie
     expect(modern_movie).to be_a ModernMovie
     expect(new_movie).to be_a NewMovie
   end
-  
+
   describe '.to_s' do
     before do
-      allow(dbl).to receive_messages(stats: {'Akira Kurosawa' => 3 })
+      allow(dbl).to receive_messages(stats: { 'Akira Kurosawa' => 3 })
     end
     it 'prints as AncientMovie' do
       expect(ancient_movie.to_s).to match(/Old Movie/)
