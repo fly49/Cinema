@@ -6,11 +6,6 @@ module Cinema
     attr_reader :account
     PRICE = { AncientMovie: 1, ClassicMovie: 1.5, ModernMovie: 3, NewMovie: 5 }.freeze
 
-    # def initialize(name)
-    #  super (name)
-    #  super()
-    # end
-
     def pay(amount)
       Netflix.add_money(amount)
     end
