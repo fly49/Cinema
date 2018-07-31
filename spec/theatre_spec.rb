@@ -1,8 +1,8 @@
-require 'cinema'
+require 'theatre'
 require 'rspec/its'
 
-describe Cinema::Theatre do
-  let(:theatre) { Cinema::Theatre.new('movies.txt') }
+describe Theatre do
+  let(:theatre) { Theatre.new('movies.txt') }
 
   describe '.when?' do
     it "should raise error if movie wasn't found" do

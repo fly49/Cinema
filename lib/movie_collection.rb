@@ -1,12 +1,9 @@
 require 'csv'
 require 'date'
 require_relative 'movie'
-require_relative 'cashbox'
 
 # MovieCollection contains information about top-250 imdb movies and allow to choose specific ones in different ways.
 class MovieCollection
-  include Enumerable
-
   attr_reader :genres
   TABLE = %I[link title year country date genre duration rating director cast].freeze
 
@@ -14,10 +11,6 @@ class MovieCollection
     raise("File doesn't exist!") unless File.file?(name)
     @database = CSV.read(name, col_sep: '|', headers: TABLE).map { |a| Movie.create(a.to_hash, self) }
     @genres = @database.flat_map(&:genre).uniq
-  end
-
-  def each
-    @database.each { |movie| yield(movie) }
   end
 
   def all
