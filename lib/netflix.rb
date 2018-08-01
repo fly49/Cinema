@@ -6,17 +6,25 @@ module Cinema
     attr_reader :account
     PRICE = { AncientMovie: 1, ClassicMovie: 1.5, ModernMovie: 3, NewMovie: 5 }.freeze
 
+    def initialize(name)
+      super
+      @account = 0.0
+    end
+
     def pay(amount)
-      Netflix.add_money(amount)
+      @account += amount
     end
 
     def how_much?(name)
-      PRICE[find(name).class.name.to_sym]
+      PRICE[find(name).class.name.split('::').last.to_sym]
     end
 
     def show(hash)
       movie = filter(hash).max_by { |m| m.rating * rand }
-      Netflix.withdraw_money(how_much?(movie.title))
+      movie_price = how_much?(movie.title)
+      raise('Not enough funds!') if @account < movie_price
+      @account -= movie_price
+      Netflix.add_money(movie_price)
       super movie
     end
   end

@@ -5,13 +5,9 @@ module Cashbox
   def cash
     @cash ||= Money.new(0, 'USD')
   end
+
   def add_money(val)
     self.cash += Money.new(val * 100, 'USD')
-  end
-
-  def withdraw_money(val)
-    raise('Not enough funds!') if self.cash < Money.new(val * 100, 'USD')
-    self.cash -= Money.new(val * 100, 'USD')
   end
 
   def take(who)
@@ -21,7 +17,7 @@ module Cashbox
   end
 
   private
-  
+
   def cash=(val)
     @cash = Money.new(val, 'USD')
   end

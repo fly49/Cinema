@@ -1,4 +1,4 @@
-require 'cinema'
+require 'theatre'
 require 'rspec/its'
 
 describe Cinema::Theatre do
