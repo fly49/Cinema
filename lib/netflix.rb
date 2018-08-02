@@ -20,15 +20,6 @@ module Cinema
       PRICE[find(name).class.name.split('::').last.to_sym]
     end
 
-    # def show(hash)
-    #  movie = .max_by { |m| m.rating * rand }
-    #  movie_price = how_much?(movie.title)
-    #  raise('Not enough funds!') if @account < movie_price
-    #  @account -= movie_price
-    #  Netflix.add_money(movie_price)
-    #  super movie
-    # end
-
     def define_filter(name, from: nil, arg: nil, &block)
       if from && arg
         filters.store(name,proc { |movie| filters[from].call(movie,arg) })
