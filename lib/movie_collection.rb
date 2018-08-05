@@ -7,7 +7,6 @@ module Cinema
   # MovieCollection contains information about top-250 imdb movies and allow to choose specific ones in different ways.
   class MovieCollection
     include Enumerable
-
     attr_reader :genres
     TABLE = %I[link title year country date genre duration rating director cast].freeze
 
