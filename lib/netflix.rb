@@ -10,6 +10,35 @@ module Cinema
       super
       @account = 0.0
       @filters = {}
+      @database[0].attributes.each do |key,_v|
+        self.class.send(:define_method,"by_#{key}") {SpecialHash.new(self,key)}
+      end
+    end
+    
+    class SpecialHash
+      attr_reader :hash, :by
+      
+      def initialize(database,param)
+        @by = param
+        @hash = database.all.each_with_object({}) do |movie, hash|
+          hash[movie.title] = movie.send(param)
+        end
+        database.genres.each do |genre|
+          self.class.send(:define_method,"#{genre.downcase}") do
+            @hash.select { |k,v| v.include?(genre) }.map(&:first)
+          end
+        end
+      end
+      
+      def method_missing(name)
+        if @by == :country
+          country = name.to_s.length > 3 ? name.to_s.capitalize : name.to_s.upcase
+          p country
+          @hash.select { |_k,v| v.include?(country) }.map(&:first)
+        end
+      end
+
+      
     end
 
     def pay(amount)
@@ -37,6 +66,8 @@ module Cinema
     end
 
     private
+    
+    
 
     def filter(**filters)
       filters.reduce(@database) do |f_data, (key, val)|

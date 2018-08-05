@@ -2,26 +2,30 @@ require_relative 'lib/netflix'
 require_relative 'lib/theatre'
 require_relative 'lib/movie'
 
-hash =
-    { link: 'http://imdb.com/title/tt0111161/?ref_=chttp_tt_1',
-      title: 'The Shawshank Redemption',
-      year: '1994',
-      country: 'USA',
-      date: '1994-10-14',
-      genre: 'Crime,Drama',
-      duration: '142 min',
-      rating: '9.3',
-      director: 'Frank Darabont',
-      cast: 'Tim Robbins,Morgan Freeman,Bob Gunton' }
+# hash =
+#    { link: 'http://imdb.com/title/tt0111161/?ref_=chttp_tt_1',
+#      title: 'The Shawshank Redemption',
+#      year: '1994',
+#      country: 'USA',
+#      date: '1994-10-14',
+#      genre: 'Crime,Drama',
+#      duration: '142 min',
+#      rating: '9.3',
+#      director: 'Frank Darabont',
+#      cast: 'Tim Robbins,Morgan Freeman,Bob Gunton' }
       
-collection = Cinema::MovieCollection.new('movies.txt')
+# collection = Cinema::MovieCollection.new('movies.txt')
 
-p movie = Cinema::Movie.create(hash, collection)
+#p movie = Cinema::Movie.create(hash, collection)
 #p Cinema::Movie.ancestors
 
 
-# netflix = Cinema::Netflix.new('movies.txt')
+netflix = Cinema::Netflix.new('movies.txt')
+
 # theatre = Cinema::Theatre.new('movies.txt')
+
+p netflix.by_genre.drama
+p netflix.by_country.japan
 
 # netflix.show("Finding Nemo")
 # netflix.pay(25)
