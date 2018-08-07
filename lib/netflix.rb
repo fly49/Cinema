@@ -12,39 +12,40 @@ module Cinema
       @filters = {}
     end
     
-    def by_genre
-      a_new_class = Class.new(Object) do
-        
-        def initialize(genres,collection)
+    class GenreSorting
+      
+      def initialize(genres,collection)
           genres.each do |defined_genre|
             self.class.send(:define_method,"#{defined_genre.downcase}") do
               collection.filter(genre: defined_genre) 
-            end
           end
         end
-        
-        def method_missing(name)
-          raise ("Incorrect genre \"#{name}\".")
-        end
-        
       end
-      a_new_class.new(@genres,self)
+      
+      def method_missing(name)
+        raise ("Incorrect genre \"#{name}\".")
+      end
+    end
+    
+    class CountrySorting
+      
+      def initialize(collection)
+        @collection = collection
+      end
+        
+      def method_missing(name)
+        country_name = name.to_s.length > 3 ? name.to_s.capitalize : name.to_s.upcase
+        result = @collection.filter(country: country_name)
+        result.empty? ? raise('No film from such country was found.') : result
+      end
+    end
+    
+    def by_genre
+      GenreSorting.new(@genres,self)
     end
     
     def by_country
-      a_new_class = Class.new(Object) do
-        
-        def initialize(collection)
-          @collection = collection
-        end
-        
-        def method_missing(name)
-          country_name = name.to_s.length > 3 ? name.to_s.capitalize : name.to_s.upcase
-          result = @collection.filter(country: country_name)
-          result.empty? ? raise('No film from such country was found.') : result
-        end
-      end
-      a_new_class.new(self)
+      CountrySorting.new(self)
     end
 
     def pay(amount)
