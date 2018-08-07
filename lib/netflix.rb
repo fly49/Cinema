@@ -10,35 +10,41 @@ module Cinema
       super
       @account = 0.0
       @filters = {}
-      @database[0].attributes.each do |key,_v|
-        self.class.send(:define_method,"by_#{key}") {SpecialHash.new(self,key)}
-      end
     end
     
-    class SpecialHash
-      attr_reader :hash, :by
-      
-      def initialize(database,param)
-        @by = param
-        @hash = database.all.each_with_object({}) do |movie, hash|
-          hash[movie.title] = movie.send(param)
-        end
-        database.genres.each do |genre|
-          self.class.send(:define_method,"#{genre.downcase}") do
-            @hash.select { |k,v| v.include?(genre) }.map(&:first)
+    def by_genre
+      a_new_class = Class.new(Object) do
+        
+        def initialize(genres,collection)
+          genres.each do |defined_genre|
+            self.class.send(:define_method,"#{defined_genre.downcase}") do
+              collection.filter(genre: defined_genre) 
+            end
           end
         end
+        
+        def method_missing(name)
+          raise ("Incorrect genre \"#{name}\".")
+        end
+        
       end
-      
-      def method_missing(name)
-        if @by == :country
-          country = name.to_s.length > 3 ? name.to_s.capitalize : name.to_s.upcase
-          p country
-          @hash.select { |_k,v| v.include?(country) }.map(&:first)
+      a_new_class.new(@genres,self)
+    end
+    
+    def by_country
+      a_new_class = Class.new(Object) do
+        
+        def initialize(collection)
+          @collection = collection
+        end
+        
+        def method_missing(name)
+          country_name = name.to_s.length > 3 ? name.to_s.capitalize : name.to_s.upcase
+          result = @collection.filter(country: country_name)
+          result.empty? ? raise('No film from such country was found.') : result
         end
       end
-
-      
+      a_new_class.new(self)
     end
 
     def pay(amount)
@@ -61,19 +67,17 @@ module Cinema
     def show(**filters, &block)
       movie = filter(filters).select(&block)
                              .max_by { |m| m.rating * rand }
-      withdraw_money(movie.title)
+      withdraw_money(movie.title) 
       super movie
     end
-
-    private
     
-    
-
     def filter(**filters)
       filters.reduce(@database) do |f_data, (key, val)|
         f_data.select { |movie| matches_filter?(movie, key, val) }
       end
     end
+
+    private
 
     def matches_filter?(movie,key,val)
       if filters[key]

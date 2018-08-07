@@ -21,11 +21,13 @@ require_relative 'lib/movie'
 
 
 netflix = Cinema::Netflix.new('movies.txt')
-
 # theatre = Cinema::Theatre.new('movies.txt')
 
-p netflix.by_genre.drama
-p netflix.by_country.japan
+#puts netflix.by_genre.comedy
+#puts '========'
+#puts netflix.by_country.japan
+
+netflix.by_country.ussa
 
 # netflix.show("Finding Nemo")
 # netflix.pay(25)
