@@ -11,39 +11,37 @@ module Cinema
       @account = 0.0
       @filters = {}
     end
-    
+
     class GenreSorting
-      
       def initialize(genres,collection)
-          genres.each do |defined_genre|
-            self.class.send(:define_method,"#{defined_genre.downcase}") do
-              collection.filter(genre: defined_genre) 
+        genres.each do |defined_genre|
+          self.class.send(:define_method,defined_genre.downcase.to_s) do
+            collection.filter(genre: defined_genre)
           end
         end
       end
-      
+
       def method_missing(name)
-        raise ("Incorrect genre \"#{name}\".")
+        raise "Incorrect genre \"#{name}\"."
       end
     end
-    
+
     class CountrySorting
-      
       def initialize(collection)
         @collection = collection
       end
-        
+
       def method_missing(name)
         country_name = name.to_s.length > 3 ? name.to_s.capitalize : name.to_s.upcase
         result = @collection.filter(country: country_name)
         result.empty? ? raise('No film from such country was found.') : result
       end
     end
-    
+
     def by_genre
       GenreSorting.new(@genres,self)
     end
-    
+
     def by_country
       CountrySorting.new(self)
     end
@@ -68,10 +66,10 @@ module Cinema
     def show(**filters, &block)
       movie = filter(filters).select(&block)
                              .max_by { |m| m.rating * rand }
-      withdraw_money(movie.title) 
+      withdraw_money(movie.title)
       super movie
     end
-    
+
     def filter(**filters)
       filters.reduce(@database) do |f_data, (key, val)|
         f_data.select { |movie| matches_filter?(movie, key, val) }

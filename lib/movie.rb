@@ -16,7 +16,7 @@ module Cinema
   # Movie contains information about specific movie and provides it in convinient form.
   class Movie
     include Virtus.model
-    
+
     attribute :link, String
     attribute :title, String
     attribute :year, Integer

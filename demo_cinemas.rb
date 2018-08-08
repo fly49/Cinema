@@ -13,19 +13,18 @@ require_relative 'lib/movie'
 #      rating: '9.3',
 #      director: 'Frank Darabont',
 #      cast: 'Tim Robbins,Morgan Freeman,Bob Gunton' }
-      
+
 # collection = Cinema::MovieCollection.new('movies.txt')
 
-#p movie = Cinema::Movie.create(hash, collection)
-#p Cinema::Movie.ancestors
-
+# p movie = Cinema::Movie.create(hash, collection)
+# p Cinema::Movie.ancestors
 
 netflix = Cinema::Netflix.new('movies.txt')
 # theatre = Cinema::Theatre.new('movies.txt')
 
-#puts netflix.by_genre.comedy
-#puts '========'
-#puts netflix.by_country.japan
+# puts netflix.by_genre.comedy
+# puts '========'
+# puts netflix.by_country.japan
 
 netflix.by_country.ussa
 
