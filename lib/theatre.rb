@@ -1,6 +1,4 @@
 require_relative 'movie_collection'
-require_relative 'hall'
-require_relative 'period'
 
 module Cinema
   class Theatre < MovieCollection
@@ -13,13 +11,49 @@ module Cinema
       raise 'Time ranges overlap!' if ranges_overlap?(periods.keys)
     end
 
-    def hall(color,hash)
-      halls[color] = Cinema::Hall.new(color: color, **hash)
+    class Hall
+      include Virtus.model
+
+      attribute :color, Symbol
+      attribute :title, String
+      attribute :places, Integer
     end
-    
+
+    class Period
+      attr_reader :time
+
+      def initialize(time)
+        @time = time
+      end
+
+      def description(data = nil)
+        @description ||= data
+      end
+
+      def filters(data = nil)
+        @filters ||= data
+      end
+
+      def price(data = nil)
+        @price ||= data
+      end
+
+      def hall(*data)
+        @hall ||= data
+      end
+
+      def title(name = nil)
+        @title ||= filters(title: name)
+      end
+    end
+
+    def hall(color,hash)
+      halls[color] = Hall.new(color: color, **hash)
+    end
+
     def period(time,&block)
       raise 'You need a block to build a period!' unless block_given?
-      periods[time] = Cinema::Period.new(time)
+      periods[time] = Period.new(time)
       periods[time].instance_eval(&block)
     end
 
