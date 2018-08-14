@@ -42,8 +42,14 @@ module Cinema
 
     def filter(hash)
       hash.reduce(@database) do |f_data, (key, val)|
-        raise('Wrong param!') unless @database[0].respond_to?(key)
-        f_data.select { |film| Array(film.send(key)).any? { |i| val === i } }
+        raise('Wrong param!') unless @database[0].respond_to?(key) || key == :exclude_country
+        if key == :exclude_country
+          f_data.reject { |film| film.country == val }
+        elsif val.is_a? Array
+          f_data.select { |film| (val & film.send(key)) == val }
+        else
+          f_data.select { |film| Array(film.send(key)).any? { |i| val === i } }
+        end
       end
     end
 

@@ -1,30 +1,88 @@
 require_relative 'movie_collection'
+require 'virtus'
 module Cinema
   class Theatre < MovieCollection
     include Cashbox
-    SCHEDULE = { morning: { period: :ancient },
-                 noon: { genre: /(Adventure|Comedy)/ },
-                 evening: { genre: /(Drama|Horror)/ },
-                 special: { genre: /(Comedy|Drama)/, cast: /Al Pacino/ } }.freeze
-    PRICE_LIST = { morning: 3.0, noon: 5.0, evening: 10.0 }.freeze
 
-    def show(time)
-      raise('Incorrect time!') unless SCHEDULE.key?(time)
-      movie = filter(SCHEDULE[time]).max_by { |m| m.rating * rand }
-      super movie
+    def initialize(file, &block)
+      super file
+      raise 'You need a block to build a theatre!' unless block_given?
+      instance_eval(&block)
+      raise 'Time ranges overlap!' if ranges_overlap?(periods.keys)
     end
 
-    def when?(name)
-      SCHEDULE.find do |time, _hash|
-        key, value = SCHEDULE[time].first
-        Array(find(name).send(key)).any? { |i| value === i }
-      end.first
+    class Hall
+      include Virtus.model
+
+      attribute :color, Symbol
+      attribute :title, String
+      attribute :places, Integer
+      def intitialize(hash)
+        super hash
+      end
     end
 
-    def buy_ticket(name)
-      movie = find(name)
-      add_money(PRICE_LIST[when?(movie.title)])
-      "You\'ve bought a ticket for the movie «#{movie.title}»."
+    class Period
+      attr_reader :time
+
+      def initialize(time)
+        @time = time
+      end
+
+      def method_missing(name, *args)
+        if args.size == 1
+          instance_variable_set("@#{name}", args[0])
+        else
+          instance_variable_set("@#{name}", args)
+        end
+        instance_eval("def self.#{name};@#{name};end")
+      end
+    end
+
+    def hall(color,hash)
+      hash[:color] = color
+      halls[color] = Hall.new(hash)
+    end
+
+    def halls
+      @halls ||= {}
+    end
+
+    def periods
+      @periods ||= {}
+    end
+
+    def period(time,&block)
+      raise 'You need a block to build a period!' unless block_given?
+      periods[time] = Period.new(time)
+      periods[time].instance_eval(&block)
+    end
+
+    def show(time,hall = nil)
+      sessions = periods.values.find_all { |prd| prd.time === time }
+      raise('Incorrect time!') if sessions.empty?
+      if sessions.length > 1
+        raise 'Please specfy the hall!' if hall.nil?
+        seance = sessions.select { |prd| Array(prd.hall).include?(hall) }.first
+      else
+        seance = sessions.first
+      end
+      movie = if seance.description == 'Спецпоказ'
+                find(seance.title)
+              else
+                filter(seance.filters).max_by { |m| m.rating * rand }
+              end
+      add_money(seance.price)
+      puts "You\'ve bought a ticket for the movie «#{movie.title}»."
+      movie
+    end
+
+    private
+
+    def ranges_overlap?(array_of_ranges)
+      array_of_ranges.sort_by(&:first).each_cons(2).any? do |x,y|
+        x.last > y.first && !(Array(periods[x].hall) & Array(periods[y].hall)).empty?
+      end
     end
   end
 end
