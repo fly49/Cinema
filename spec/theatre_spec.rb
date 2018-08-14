@@ -70,6 +70,18 @@ describe Cinema::Theatre do
       expect { theatre_overlapped }.to raise_error(RuntimeError,'Time ranges overlap!')
     end
   end
+  
+  describe '.halls' do
+    context 'should return all halls' do
+      it { expect(theatre.halls.values).to all(be_a Cinema::Hall) }
+    end
+  end
+  
+  describe '.periods' do
+    context 'should return all periods' do
+      it { expect(theatre.periods.values).to all(be_a Cinema::Period) }
+    end
+  end
 
   describe '.show' do
     it 'should raise error if time is incorrect' do

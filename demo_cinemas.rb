@@ -79,7 +79,7 @@ theatre =
       hall :green
     end
   end
-
+p theatre.halls
 theatre.show('19:20',:green)
-p theatre.cash
+
 

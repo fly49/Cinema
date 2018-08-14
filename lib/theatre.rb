@@ -1,5 +1,7 @@
 require_relative 'movie_collection'
-require 'virtus'
+require_relative 'hall'
+require_relative 'period'
+
 module Cinema
   class Theatre < MovieCollection
     include Cashbox
@@ -11,37 +13,14 @@ module Cinema
       raise 'Time ranges overlap!' if ranges_overlap?(periods.keys)
     end
 
-    class Hall
-      include Virtus.model
-
-      attribute :color, Symbol
-      attribute :title, String
-      attribute :places, Integer
-      def intitialize(hash)
-        super hash
-      end
-    end
-
-    class Period
-      attr_reader :time
-
-      def initialize(time)
-        @time = time
-      end
-
-      def method_missing(name, *args)
-        if args.size == 1
-          instance_variable_set("@#{name}", args[0])
-        else
-          instance_variable_set("@#{name}", args)
-        end
-        instance_eval("def self.#{name};@#{name};end")
-      end
-    end
-
     def hall(color,hash)
-      hash[:color] = color
-      halls[color] = Hall.new(hash)
+      halls[color] = Cinema::Hall.new(color: color, **hash)
+    end
+    
+    def period(time,&block)
+      raise 'You need a block to build a period!' unless block_given?
+      periods[time] = Cinema::Period.new(time)
+      periods[time].instance_eval(&block)
     end
 
     def halls
@@ -50,12 +29,6 @@ module Cinema
 
     def periods
       @periods ||= {}
-    end
-
-    def period(time,&block)
-      raise 'You need a block to build a period!' unless block_given?
-      periods[time] = Period.new(time)
-      periods[time].instance_eval(&block)
     end
 
     def show(time,hall = nil)
@@ -67,11 +40,7 @@ module Cinema
       else
         seance = sessions.first
       end
-      movie = if seance.description == 'Спецпоказ'
-                find(seance.title)
-              else
-                filter(seance.filters).max_by { |m| m.rating * rand }
-              end
+      movie = filter(seance.filters).max_by { |m| m.rating * rand }
       add_money(seance.price)
       puts "You\'ve bought a ticket for the movie «#{movie.title}»."
       movie
