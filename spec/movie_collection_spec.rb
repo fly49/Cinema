@@ -60,6 +60,9 @@ describe Cinema::MovieCollection do
     context 'Genre filtering' do
       it { expect(subject.filter(genre: 'Comedy')).to all(have_attributes(genre: include('Comedy'))) }
     end
+    context 'Array of genres filtering' do
+      it { expect(subject.filter(genre: %w[Comedy War])).to all(have_attributes(genre: include('Comedy'))) }
+    end
     context 'Cast filtering' do
       it { expect(subject.filter(cast: /Schwarz(.*)/)).to all(have_attributes(cast: include('Arnold Schwarzenegger'))) }
     end

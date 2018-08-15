@@ -1,7 +1,32 @@
+require 'virtus'
+
+class ArrOfStr < Virtus::Attribute
+  def coerce(value)
+    value.split(',')
+  end
+end
+
+class Minutes < Virtus::Attribute
+  def coerce(value)
+    value.chomp(' min').to_i
+  end
+end
+
 module Cinema
   # Movie contains information about specific movie and provides it in convinient form.
   class Movie
-    attr_reader :link, :title, :country, :date, :director
+    include Virtus.model
+
+    attribute :link, String
+    attribute :title, String
+    attribute :year, Integer
+    attribute :country, String
+    attribute :date, String
+    attribute :genre, ArrOfStr
+    attribute :duration, Minutes
+    attribute :rating, Float
+    attribute :director, String
+    attribute :cast, ArrOfStr
 
     def self.create(hash, collection)
       case hash[:year].to_i
@@ -16,11 +41,9 @@ module Cinema
       end
     end
 
-    def initialize(params, collection)
+    def initialize(params,collection)
       @collection = collection
-      params.each do |key, value|
-        instance_variable_set("@#{key}", value)
-      end
+      super params
     end
 
     def to_s
@@ -29,26 +52,6 @@ module Cinema
 
     def month
       Date::MONTHNAMES[@date.split('-')[1].to_i] || 'Unknown'
-    end
-
-    def duration
-      @duration.chomp(' min').to_i
-    end
-
-    def genre
-      @genre.split(',')
-    end
-
-    def cast
-      @cast.split(',')
-    end
-
-    def year
-      @year.to_i
-    end
-
-    def rating
-      @rating.to_f
     end
 
     def period

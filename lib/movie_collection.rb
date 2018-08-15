@@ -7,7 +7,6 @@ module Cinema
   # MovieCollection contains information about top-250 imdb movies and allow to choose specific ones in different ways.
   class MovieCollection
     include Enumerable
-
     attr_reader :genres
     TABLE = %I[link title year country date genre duration rating director cast].freeze
 
@@ -43,8 +42,15 @@ module Cinema
 
     def filter(hash)
       hash.reduce(@database) do |f_data, (key, val)|
-        raise('Wrong param!') unless @database[0].respond_to?(key)
-        f_data.select { |film| Array(film.send(key)).any? { |i| val === i } }
+        raise('Wrong param!') unless @database[0].respond_to?(key) || key.to_s.split('_').first == 'exclude'
+        if key.to_s.split('_').first == 'exclude'
+          param = key.to_s.split('_').last
+          f_data.reject { |film| film.send(param) == val }
+        elsif val.is_a? Array
+          f_data.select { |film| (val & film.send(key)) == val }
+        else
+          f_data.select { |film| Array(film.send(key)).any? { |i| val === i } }
+        end
       end
     end
 

@@ -114,4 +114,22 @@ describe Cinema::Netflix do
       expect { netflix.define_filter(:certain_custom_year, from: :blabla, arg: 2014) }.to raise_error(RuntimeError,'Filter doesn\'t exist!')
     end
   end
+
+  describe '.by_genre' do
+    context 'it should return array of films with specified genre' do
+      it { expect(netflix.by_genre.comedy).to all(have_attributes(genre: include('Comedy'))) }
+    end
+    it 'should raise error if entered genre is incorrect' do
+      expect { netflix.by_genre.cmdy }.to raise_error(RuntimeError, 'Incorrect genre "cmdy".')
+    end
+  end
+
+  describe '.by_county' do
+    context 'it should return array of films with specified genre' do
+      it { expect(netflix.by_country.japan).to all(have_attributes(country: include('Japan'))) }
+    end
+    it 'should raise error if entered genre is incorrect' do
+      expect { netflix.by_country.jpan }.to raise_error(RuntimeError, 'No film from such country was found.')
+    end
+  end
 end
