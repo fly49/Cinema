@@ -1,23 +1,25 @@
-%table{:border => 1}
-  %tbody
-    %tr
-      %td Title:
-      %td Year:
-      %td Country:
-      %td Date:
-      %td Genre:
-      %td Duration:
-      %td Rating:
-      %td Director:
-      %td Cast:
-    - netflix.all.each do |movie|
-      %tr
-        %td= movie.title
-        %td= movie.year
-        %td= movie.country
-        %td= movie.date
-        %td= movie.genre
-        %td= movie.duration
-        %td= movie.rating
-        %td= movie.director
-        %td= movie.cast
+%html
+  %body
+    %table{:border => 1}
+      %tbody
+        %tr
+          %td Title:
+          %td Year:
+          %td Country:
+          %td Date:
+          %td Genre:
+          %td Duration:
+          %td Rating:
+          %td Director:
+          %td Cast:
+        - netflix.all.each do |movie|
+          %tr
+            %td= movie.title
+            %td= movie.year
+            %td= movie.country
+            %td= movie.date
+            %td= movie.genre
+            %td= movie.duration
+            %td= movie.rating
+            %td= movie.director
+            %td= movie.cast
