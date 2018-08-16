@@ -1,6 +1,6 @@
 require_relative 'lib/netflix'
 require_relative 'lib/theatre'
-require_relative 'lib/movie'
+
 
 # hash =
 #    { link: 'http://imdb.com/title/tt0111161/?ref_=chttp_tt_1',
@@ -30,14 +30,7 @@ collection = Cinema::MovieCollection.new('movies.txt')
 
 # netflix.show("Finding Nemo")
 # netflix.pay(25)
-# netflix.show(genre: 'Drama', period: :classic, country: 'France')
-# netflix.show { |movie| movie.genre.include?('Action') && movie.year > 2000 && movie.rating > 8.5 }
-# netflix.define_filter(:old) { |movie| movie.year < 1960 }
-# netflix.define_filter(:actions) { |movie| movie.genre.include?('Action') }
-# puts netflix.filters
-# netflix.show(old: true)
-# netflix.define_filter(:custom_year) { |movie, year| movie.year > year }
-# netflix.show(custom_year: 2010)
+
 # puts netflix.account
 # netflix.define_filter(:new_custom_year, from: :custom_year, arg: 2014)
 # netflix.show(new_custom_year: true)
@@ -82,4 +75,16 @@ theatre =
 p theatre.halls
 theatre.show('19:20',:green)
 
+
+
+#theatre.show(:special)
+#puts theatre.when?('The Kid')
+
+#yaml = YAML.load_file("movies.txt")
+#p yaml
+
+Tmdb::Api.key("1f0a1ffab16aa952b101497e65a09e46")
+netflix.all.first.link.match(%r{tt\d{5,7}})
+movie = Tmdb::Find.movie(netflix.all.first.link.match(%r{tt\d{5,7}}), external_source: 'imdb_id', language: 'ru')
+p movie
 
