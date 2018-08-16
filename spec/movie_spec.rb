@@ -1,7 +1,7 @@
 require 'movie_collection'
 require 'rspec/its'
 
-describe Movie do
+describe Cinema::Movie do
   let(:data) do
     { link: 'http://imdb.com/title/tt0111161/?ref_=chttp_tt_1',
       title: 'The Shawshank Redemption',
@@ -14,8 +14,8 @@ describe Movie do
       director: 'Frank Darabont',
       cast: 'Tim Robbins,Morgan Freeman,Bob Gunton' }
   end
-  let(:dbl) { double(MovieCollection.new('movies.txt')) }
-  subject { Movie.new(data, dbl) }
+  let(:dbl) { double(Cinema::MovieCollection.new('movies.txt')) }
+  subject { Cinema::Movie.new(data, dbl) }
 
   describe 'it has been instantiated properly' do
     its(:link) { is_expected.to match(%r{imdb.com\/title(.*)}) }
@@ -40,7 +40,7 @@ describe Movie do
   end
 end
 
-describe "specified movies" do
+describe 'specified movies' do
   let(:ancient_movie_data) do
     { link: 'http://imdb.com/title/tt0034583/?ref_=chttp_tt_32',
       title: 'Casablanca',
@@ -89,22 +89,22 @@ describe "specified movies" do
       director: 'Pete Docter',
       cast: 'Amy Poehler,Bill Hader,Lewis Black' }
   end
-  let(:dbl) { double(MovieCollection.new('movies.txt')) }
-  let(:ancient_movie) { Movie.create(ancient_movie_data, dbl) }
-  let(:classic_movie) { Movie.create(classic_movie_data, dbl) }
-  let(:modern_movie) { Movie.create(modern_movie_data, dbl) }
-  let(:new_movie) { Movie.create(new_movie_data, dbl) }
-  
+  let(:dbl) { double(Cinema::MovieCollection.new('movies.txt')) }
+  let(:ancient_movie) { Cinema::Movie.create(ancient_movie_data, dbl) }
+  let(:classic_movie) { Cinema::Movie.create(classic_movie_data, dbl) }
+  let(:modern_movie) { Cinema::Movie.create(modern_movie_data, dbl) }
+  let(:new_movie) { Cinema::Movie.create(new_movie_data, dbl) }
+
   it 'has been instantiated as specified movie' do
-    expect(ancient_movie).to be_a AncientMovie
-    expect(classic_movie).to be_a ClassicMovie
-    expect(modern_movie).to be_a ModernMovie
-    expect(new_movie).to be_a NewMovie
+    expect(ancient_movie).to be_a Cinema::AncientMovie
+    expect(classic_movie).to be_a Cinema::ClassicMovie
+    expect(modern_movie).to be_a Cinema::ModernMovie
+    expect(new_movie).to be_a Cinema::NewMovie
   end
-  
+
   describe '.to_s' do
     before do
-      allow(dbl).to receive_messages(stats: {'Akira Kurosawa' => 3 })
+      allow(dbl).to receive_messages(stats: { 'Akira Kurosawa' => 3 })
     end
     it 'prints as AncientMovie' do
       expect(ancient_movie.to_s).to match(/Old Movie/)

@@ -1,11 +1,11 @@
 require 'movie_collection'
 require 'rspec/its'
 
-describe MovieCollection do
-  subject { MovieCollection.new('movies.txt') }
+describe Cinema::MovieCollection do
+  subject { Cinema::MovieCollection.new('movies.txt') }
 
   describe 'it has been instantiated' do
-    its(:all) { is_expected.to all be_a Movie }
+    its(:all) { is_expected.to all be_a Cinema::Movie }
     its(:genres) { is_expected.to be_an Array }
     it { expect(subject.all.count).to eq 250 }
   end
@@ -60,6 +60,9 @@ describe MovieCollection do
     context 'Genre filtering' do
       it { expect(subject.filter(genre: 'Comedy')).to all(have_attributes(genre: include('Comedy'))) }
     end
+    context 'Array of genres filtering' do
+      it { expect(subject.filter(genre: %w[Comedy War])).to all(have_attributes(genre: include('Comedy'))) }
+    end
     context 'Cast filtering' do
       it { expect(subject.filter(cast: /Schwarz(.*)/)).to all(have_attributes(cast: include('Arnold Schwarzenegger'))) }
     end
@@ -73,7 +76,7 @@ describe MovieCollection do
       it { expect { subject.find('abcd') }.to raise_error(RuntimeError,'Movie not found!') }
     end
     context 'Right format' do
-      it { expect(subject.find('The Matrix')).to be_a Movie }
+      it { expect(subject.find('The Matrix')).to be_a Cinema::Movie }
     end
   end
 end
