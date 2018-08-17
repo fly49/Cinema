@@ -26,5 +26,5 @@ module Cinema
   end
 end
 
-netflix = Netflix.new('movies.txt')
-Cinema::NetflixRenderer.new(netflix).render_to('page2.html','html_pages/')
+netflix = Cinema::Netflix.new('movies.txt')
+Cinema::NetflixRenderer.new(netflix).render_to('page.html','html_pages/')

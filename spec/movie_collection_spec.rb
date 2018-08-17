@@ -8,6 +8,7 @@ describe Cinema::MovieCollection do
     its(:all) { is_expected.to all be_a Cinema::Movie }
     its(:genres) { is_expected.to be_an Array }
     it { expect(subject.all.count).to eq 250 }
+    it { expect(subject.img_base.keys).to all match(%r{tt\d{5,7}}) }
   end
 
   describe '.sort_by' do

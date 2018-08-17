@@ -1,25 +1,39 @@
 %html
+  %head
+    %div{ :style => "margin-top:25px"}
+      %big
+        %big
+          %big
+            %center
+              %b= "Movie Database"
   %body
-    %table{:border => 1}
-      %tbody
-        %tr
-          %td Title:
-          %td Year:
-          %td Country:
-          %td Date:
-          %td Genre:
-          %td Duration:
-          %td Rating:
-          %td Director:
-          %td Cast:
-        - netflix.all.each do |movie|
-          %tr
-            %td= movie.title
-            %td= movie.year
-            %td= movie.country
-            %td= movie.date
-            %td= movie.genre
-            %td= movie.duration
-            %td= movie.rating
-            %td= movie.director
-            %td= movie.cast
+    %meta{ :charset => "UTF-8" }
+      %div{ :style => "margin-top:15px"}
+        %table{:border => 1}
+          %tbody
+            %tr
+              %td Poster:
+              %td Title:
+              %td Year:
+              %td Country:
+              %td Date:
+              %td Genre:
+              %td Duration:
+              %td Rating:
+              %td Director:
+              %td Cast:
+            - netflix.all.each do |movie|
+              %tr
+                %td
+                  %img{:src => movie.img_url}
+                %td{:align => :center}
+                  %b= movie.title
+                  %p= movie.rus_title
+                %td= movie.year
+                %td= movie.country
+                %td= movie.date
+                %td= movie.genre
+                %td= movie.duration
+                %td= movie.rating
+                %td= movie.director
+                %td= movie.cast

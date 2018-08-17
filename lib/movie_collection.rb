@@ -7,12 +7,13 @@ module Cinema
   # MovieCollection contains information about top-250 imdb movies and allow to choose specific ones in different ways.
   class MovieCollection
     include Enumerable
-    attr_reader :genres
+    attr_reader :genres, :img_base
     TABLE = %I[link title year country date genre duration rating director cast].freeze
 
     def initialize(name)
       raise("File doesn't exist!") unless File.file?(name)
       @database = CSV.read(name, col_sep: '|', headers: TABLE).map { |a| Movie.create(a.to_hash, self) }
+      @img_base = YAML::parse( File.open( 'tmdb_base.yml' ) ).transform
       @genres = @database.flat_map(&:genre).uniq
     end
 

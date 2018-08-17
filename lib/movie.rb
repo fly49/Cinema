@@ -49,6 +49,10 @@ module Cinema
     def to_s
       "#{@title} (#{@date}; #{@genre}) - #{@duration}"
     end
+    
+    def imdb_id
+      @link.match(%r{tt\d{5,7}}).to_s
+    end
 
     def month
       Date::MONTHNAMES[@date.split('-')[1].to_i] || 'Unknown'
@@ -56,6 +60,14 @@ module Cinema
 
     def period
       self.class.name.split('::').last.chomp('Movie').downcase.to_sym
+    end
+    
+    def rus_title
+      @collection.img_base[imdb_id][1]
+    end
+    
+    def img_url
+      @collection.img_base[imdb_id][2]
     end
 
     # rubocop:disable Naming/PredicateName
