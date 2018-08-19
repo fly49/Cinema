@@ -2,16 +2,21 @@ require 'csv'
 require 'yaml'
 require 'themoviedb-api'
 
-def get_tmdb_data
-  Tmdb::Api.key("1f0a1ffab16aa952b101497e65a09e46")
-  config = Tmdb::Configuration.get
-  
-  base = CSV.read('movies.txt', col_sep: '|').map { |a| Hash[a[1],a[0].match(%r{tt\d{5,7}}).to_s] }
-  
-  unless File.exist?('tmdb_base.yml')
+class GetTmdbData
+  def get
+    if File.exist?('tmdb_base.yml')
+      puts 'Data has already been gotten'
+      return
+    end
+    
+    Tmdb::Api.key("1f0a1ffab16aa952b101497e65a09e46")
+    config = Tmdb::Configuration.get
+    
+    base = CSV.read('movies.txt', col_sep: '|').map { |a| Hash[a[1],a[0].match(%r{tt\d{5,7}}).to_s] }
+    
     tmdb_base = base.each.with_index.each_with_object({})  do |(v, i), hash|
       rus_title, id = v.first
-      if i % 30 == 0 
+      if i % 40 == 0 
         sleep 10
       end
       movie = Tmdb::Find.movie(id, external_source: 'imdb_id', language: 'ru').first

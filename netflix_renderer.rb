@@ -1,5 +1,4 @@
 require 'haml'
-require 'fileutils'
 require_relative 'lib/netflix'
 
 module Cinema
@@ -25,6 +24,3 @@ module Cinema
     end
   end
 end
-
-netflix = Cinema::Netflix.new('movies.txt')
-Cinema::NetflixRenderer.new(netflix).render_to('page.html','html_pages/')

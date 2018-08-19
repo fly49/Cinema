@@ -13,7 +13,9 @@ module Cinema
     def initialize(name)
       raise("File doesn't exist!") unless File.file?(name)
       @database = CSV.read(name, col_sep: '|', headers: TABLE).map { |a| Movie.create(a.to_hash, self) }
-      @img_base = YAML::parse( File.open( 'tmdb_base.yml' ) ).transform
+      if File.exist?('tmdb_base.yml')
+        @img_base = YAML::parse( File.open( 'tmdb_base.yml' ) ).transform
+      end
       @genres = @database.flat_map(&:genre).uniq
     end
 

@@ -5,4 +5,6 @@ gem 'rspec'
 gem 'rspec-its'
 gem 'themoviedb-api'
 gem 'virtus'
-
+gem 'webmock'
+gem 'rspec-html-matchers'
+gem 'haml'
