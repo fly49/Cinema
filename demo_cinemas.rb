@@ -21,7 +21,7 @@ require 'haml'
 # p movie = Cinema::Movie.create(hash, collection)
 # p Cinema::Movie.ancestors
 
-# netflix = 
+# netflix =
 # theatre = Cinema::Theatre.new('movies.txt')
 
 # puts netflix.by_genre.comedy
