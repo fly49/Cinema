@@ -1,13 +1,13 @@
 %html
   %head
+    %meta{ :charset => "UTF-8" }
+  %body
     %div{ :style => "margin-top:25px"}
       %big
         %big
           %big
             %center
               %b= "Movie Database"
-  %body
-    %meta{ :charset => "UTF-8" }
       %div{ :style => "margin-top:15px"}
         %table{:border => 1}
           %tbody
@@ -20,6 +20,7 @@
               %td Genre:
               %td Duration:
               %td Rating:
+              %td Budget:
               %td Director:
               %td Cast:
             - netflix.all.each do |movie|
@@ -35,5 +36,6 @@
                 %td= movie.genre
                 %td= movie.duration
                 %td= movie.rating
+                %td= movie.budget
                 %td= movie.director
                 %td= movie.cast

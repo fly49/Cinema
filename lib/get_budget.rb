@@ -3,18 +3,39 @@ require 'nokogiri'
 require 'open-uri'
 require 'open_uri_redirections'
 
-def get_budget(movie)
-  unless File.exist?("movie_pages/#{movie.imdb_id}.html")
-    page = Nokogiri::HTML(open(movie.link, :allow_redirections => :safe).read)
-    File.open(File.join("movie_pages/", "#{movie.imdb_id}.html"), 'w') do |f|
-      f.write(page)
-    end
+class GetBudget
+  def get_budget(movie)
+    page = Nokogiri::HTML(get_page(movie))
+    fetch_budget(page)
   end
-  page = Nokogiri::HTML(File.read("movie_pages/#{imdb_id}.html"))
-  html_data = page.css("div[class='txt-block']").select{|el| el.text.include?('Budget')}
-  if html_data.empty?
-    'Unknown budget'
-  else
-    html_data.first.text.match('Budget:.*').to_s.gsub("Budget:", "")
+  
+  def get_all_budgets(movies)
+    if File.exist?('budgets.yml')
+      puts 'Budgets has already been gotten'
+      return
+    end
+    @budgets = movies.each_with_object({}) do |movie, hash|
+      hash[movie.imdb_id] = get_budget(movie)
+    end
+    self
+  end
+  
+  def save(path)
+    File.write(path,@budgets.to_yaml)
+  end
+  
+  private
+  
+  def get_page(movie)
+    cache_filename = "movie_pages/#{movie.imdb_id}.html"
+    return File.read(cache_filename) if File.exists?(cache_filename)
+    open(movie.link, :allow_redirections => :safe).read
+                        .tap { |response| File.write(cache_filename, response) }
+  end
+  
+  def fetch_budget(page)
+    text = page.css("div[class='txt-block']").map(&:text).grep(/Budget:/).first
+    return unless text
+    text.scan(/Budget:\s*(.+)$/).flatten.first
   end
 end

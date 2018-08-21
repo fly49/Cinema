@@ -2,20 +2,22 @@ require 'csv'
 require 'date'
 require_relative 'movie'
 require_relative 'cashbox'
+require_relative 'get_tmdb_data'
 
 module Cinema
   # MovieCollection contains information about top-250 imdb movies and allow to choose specific ones in different ways.
   class MovieCollection
     include Enumerable
-    attr_reader :genres, :img_base
+    attr_reader :genres, :img_base, :budget_base
     TABLE = %I[link title year country date genre duration rating director cast].freeze
 
     def initialize(name)
       raise("File doesn't exist!") unless File.file?(name)
       @database = CSV.read(name, col_sep: '|', headers: TABLE).map { |a| Movie.create(a.to_hash, self) }
-      if File.exist?('tmdb_base.yml')
-        @img_base = YAML::parse( File.open( 'tmdb_base.yml' ) ).transform
-      end
+      GetTmdbData.new.fetch_all(@database).save('tmdb_base.yml') unless File.exist?('tmdb_base.yml')
+      GetBudget.new.get_all_budgets(@database).save('budgets.yml') unless File.exist?('budgets.yml')
+      @img_base = YAML.parse(File.open('tmdb_base.yml')).transform
+      @budget_base = YAML.parse(File.open('budgets.yml')).transform
       @genres = @database.flat_map(&:genre).uniq
     end
 

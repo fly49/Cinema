@@ -8,23 +8,25 @@ describe '.get_tmdb_data' do
   let!(:config_stub) { WebMock.stub_request(:any, %r{api.themoviedb.org/3/configuration}).to_return(status: 200, body: config_hash.to_json, headers: {}) }
   let!(:movie_hash) { {"movie_results":[{"adult":false,"backdrop_path":"/j9XKiZrVeViAixVRzCta7h1VU9W.jpg","genre_ids":[80,18],"id":278,"original_language":"en","original_title":"The Shawshank Redemption","overview":"Фильм удостоен шести номинаций на `Оскар`, в том числе и как лучший фильм года. Шоушенк - название тюрьмы. И если тебе нет еще 30-ти, а ты получаешь пожизненное, то приготовься к худшему: для тебя выхода из Шоушенка не будет! Актриса Рита Хэйворт - любимица всей Америки. Энди Дифрейну она тоже очень нравилась. Рита никогда не слышала о существовании Энди, однако жизнь Дифрейну, бывшему вице-президенту крупного банка, осужденному за убийство жены и ее любовника, Рита Хэйворт все-таки спасла.","poster_path":"/sRBNv6399ZpCE4RrM8tRsDLSsaG.jpg","release_date":"1994-09-23","title":"Побег из Шоушенка","video":false,"vote_average":8.6,"vote_count":10732,"popularity":23.401}],"person_results":[],"tv_results":[],"tv_episode_results":[],"tv_season_results":[]} }
   let!(:movie_stub) { WebMock.stub_request(:any, %r{api.themoviedb.org/3/find}).to_return(status: 200, body: movie_hash.to_json, headers: {}) }
-    
+  let!(:page) {"<div class=\"txt-block\"><h4 class=\"inline\">Budget:</h4>$25,000,000\n<span class=\"attribute\">(estimated)</span></div>"}
+  let!(:imdb_stub) { WebMock.stub_request(:any, %r{imdb.com}).to_return(status: 200, body: page.to_yaml, headers: {}) }
+
   before do
     WebMock.disable_net_connect!
     Cinema::MovieCollection.new('movies.txt')
   end
-  
+
   it 'should connect with the API' do
     expect(config_stub).to have_been_requested.times(1)
     expect(movie_stub).to have_been_requested.times(250)
   end
-  
+
   describe 'it should create proper YAML file' do
-    subject { YAML::parse( File.open( 'tmdb_base.yml' ) ).transform }
-    it{ expect(subject.keys.first).to eq('tt0111161') }
-    it{ expect(subject.values[0]).to eq(['The Shawshank Redemption','Побег из Шоушенка','http://image.tmdb.org/t/p/w154/sRBNv6399ZpCE4RrM8tRsDLSsaG.jpg']) }
+    subject { YAML.parse(File.open('tmdb_base.yml')).transform }
+    it { expect(subject.keys.first).to eq('tt0111161') }
+    it { expect(subject.values[0]).to eq(['The Shawshank Redemption','Побег из Шоушенка','http://image.tmdb.org/t/p/w154/sRBNv6399ZpCE4RrM8tRsDLSsaG.jpg']) }
   end
-  
+
   after(:all) do
     File.delete('tmdb_base.yml')
   end

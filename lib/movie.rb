@@ -1,4 +1,5 @@
 require 'virtus'
+require_relative 'get_budget'
 
 class ArrOfStr < Virtus::Attribute
   def coerce(value)
@@ -49,9 +50,9 @@ module Cinema
     def to_s
       "#{@title} (#{@date}; #{@genre}) - #{@duration}"
     end
-    
+
     def imdb_id
-      @link.match(%r{tt\d{5,7}}).to_s
+      @link.match(/tt\d{5,7}/).to_s
     end
 
     def month
@@ -61,13 +62,17 @@ module Cinema
     def period
       self.class.name.split('::').last.chomp('Movie').downcase.to_sym
     end
-    
+
     def rus_title
-      @collection.img_base[imdb_id][1]
+      @collection.img_base.dig(imdb_id,1)
+    end
+
+    def img_url
+      @collection.img_base.dig(imdb_id,2)
     end
     
-    def img_url
-      @collection.img_base[imdb_id][2]
+    def budget
+      @collection.budget_base[imdb_id]
     end
 
     # rubocop:disable Naming/PredicateName
