@@ -1,8 +1,12 @@
 source 'https://rubygems.org'
 
+gem 'haml'
 gem 'money'
+gem 'nokogiri'
+gem 'open_uri_redirections'
 gem 'rspec'
+gem 'rspec-html-matchers'
 gem 'rspec-its'
 gem 'themoviedb-api'
 gem 'virtus'
-
+gem 'webmock'

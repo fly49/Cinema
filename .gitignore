@@ -1,0 +1,5 @@
+config/
+movie_pages/
+
+Gemfile.lock
+.rubocop.yml
