@@ -47,7 +47,6 @@ describe Cinema::Movie do
   context 'new_data methods' do
     before do
       allow(dbl).to receive_messages(img_base: tmdb_data)
-      
     end
     describe '.rus_title' do
       it 'returns russian title' do
@@ -60,7 +59,7 @@ describe Cinema::Movie do
         expect(subject.img_url).to match(%r{http://image.tmdb.org/t/p/w154/[A-Za-z0-9]*.jpg})
       end
     end
-    
+
     describe '.budget' do
       it 'returns movie budget' do
         expect(subject.budget).to eq('$25,000,000')

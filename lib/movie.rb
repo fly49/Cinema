@@ -70,7 +70,7 @@ module Cinema
     def img_url
       @collection.img_base.dig(imdb_id,2)
     end
-    
+
     def budget
       @collection.budget_base[imdb_id]
     end
