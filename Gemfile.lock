@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
@@ -8,12 +10,18 @@ GEM
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     concurrent-ruby (1.0.5)
+    crack (0.4.3)
+      safe_yaml (~> 1.0.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.3)
     domain_name (0.5.20180417)
       unf (>= 0.0.5, < 1.0.0)
     equalizer (0.0.11)
+    haml (5.0.4)
+      temple (>= 0.8.0)
+      tilt
+    hashdiff (0.3.7)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (1.0.1)
@@ -22,9 +30,14 @@ GEM
     mime-types (3.2.2)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2018.0812)
+    mini_portile2 (2.3.0)
     money (6.12.0)
       i18n (>= 0.6.4, < 1.1)
     netrc (0.11.0)
+    nokogiri (1.8.4)
+      mini_portile2 (~> 2.3.0)
+    open_uri_redirections (0.2.1)
+    public_suffix (3.0.3)
     rest-client (2.0.2)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
@@ -38,6 +51,9 @@ GEM
     rspec-expectations (3.7.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.7.0)
+    rspec-html-matchers (0.9.1)
+      nokogiri (~> 1)
+      rspec (>= 3.0.0.a, < 4)
     rspec-its (1.2.0)
       rspec-core (>= 3.0.0)
       rspec-expectations (>= 3.0.0)
@@ -45,9 +61,12 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
+    safe_yaml (1.0.4)
+    temple (0.8.0)
     themoviedb-api (1.3.0)
       rest-client (~> 2.0, >= 2.0)
     thread_safe (0.3.6)
+    tilt (2.0.8)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.5)
@@ -56,16 +75,25 @@ GEM
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
       equalizer (~> 0.0, >= 0.0.9)
+    webmock (3.4.2)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+      hashdiff
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  haml
   money
+  nokogiri
+  open_uri_redirections
   rspec
+  rspec-html-matchers
   rspec-its
   themoviedb-api
   virtus
+  webmock
 
 BUNDLED WITH
    1.16.3

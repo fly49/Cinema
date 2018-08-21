@@ -1,6 +1,7 @@
+require_relative 'lib/netflix_renderer'
 require_relative 'lib/netflix'
-require_relative 'lib/theatre'
-
+require 'themoviedb-api'
+require 'haml'
 
 # hash =
 #    { link: 'http://imdb.com/title/tt0111161/?ref_=chttp_tt_1',
@@ -14,12 +15,13 @@ require_relative 'lib/theatre'
 #      director: 'Frank Darabont',
 #      cast: 'Tim Robbins,Morgan Freeman,Bob Gunton' }
 
-collection = Cinema::MovieCollection.new('movies.txt')
+# collection = Cinema::MovieCollection.new('movies.txt')
+# p collection.all.first.rus_title
 
 # p movie = Cinema::Movie.create(hash, collection)
 # p Cinema::Movie.ancestors
 
-# netflix = Cinema::Netflix.new('movies.txt')
+# netflix = 
 # theatre = Cinema::Theatre.new('movies.txt')
 
 # puts netflix.by_genre.comedy
@@ -38,53 +40,15 @@ collection = Cinema::MovieCollection.new('movies.txt')
 # theatre.show(:special)
 # puts theatre.when?('The Kid')
 
-theatre =
-  Cinema::Theatre.new('movies.txt') do
-    hall :red, title: 'Красный зал', places: 100
-    hall :blue, title: 'Синий зал', places: 50
-    hall :green, title: 'Зелёный зал (deluxe)', places: 12
+# Tmdb::Api.key("1f0a1ffab16aa952b101497e65a09e46")
+# collection.all.first.link.match(%r{tt\d{5,7}})
+# movie = Tmdb::Find.movie(collection.all.first.link.match(%r{tt\d{5,7}}), external_source: 'imdb_id', language: 'ru')
+# p movie
 
-    period '09:00'..'11:00' do
-      description 'Утренний сеанс'
-      filters genre: 'Comedy', year: 1900..1980
-      price 10
-      hall :red, :blue
-    end
+# p "http://api.themoviedb.org/3/find/tt0111161?api_key=1f0a1ffab16aa952b101497e65a09e46&external_source=imdb_id&language=ru".
+# match(/api.themoviedb.org/)
 
-    period '11:00'..'16:00' do
-      description 'Спецпоказ'
-      title 'The Terminator'
-      price 50
-      hall :green
-    end
+# p open('html_pages/page.html').read.class
 
-    period '16:00'..'20:00' do
-      description 'Вечерний сеанс'
-      filters genre: %w[Action Drama], year: 2007..Time.now.year
-      price 20
-      hall :red, :blue
-    end
-
-    period '19:00'..'22:00' do
-      description 'Вечерний сеанс для киноманов'
-      filters year: 1900..1945, exclude_country: 'USA'
-      price 30
-      hall :green
-    end
-  end
-p theatre.halls
-theatre.show('19:20',:green)
-
-
-
-#theatre.show(:special)
-#puts theatre.when?('The Kid')
-
-#yaml = YAML.load_file("movies.txt")
-#p yaml
-
-Tmdb::Api.key("1f0a1ffab16aa952b101497e65a09e46")
-netflix.all.first.link.match(%r{tt\d{5,7}})
-movie = Tmdb::Find.movie(netflix.all.first.link.match(%r{tt\d{5,7}}), external_source: 'imdb_id', language: 'ru')
-p movie
-
+netflix = Cinema::Netflix.new('movies.txt')
+Cinema::NetflixRenderer.new(netflix).render_to('html_pages/page.html')

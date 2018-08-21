@@ -14,6 +14,11 @@ describe Cinema::Movie do
       director: 'Frank Darabont',
       cast: 'Tim Robbins,Morgan Freeman,Bob Gunton' }
   end
+  let(:tmdb_data) do
+    { 'tt0111161' => ['The Shawshank Redemption',
+                      'Побег из Шоушенка',
+                      'http://image.tmdb.org/t/p/w154/sRBNv6399ZpCE4RrM8tRsDLSsaG.jpg'] }
+  end
   let(:dbl) { double(Cinema::MovieCollection.new('movies.txt')) }
   subject { Cinema::Movie.new(data, dbl) }
 
@@ -36,6 +41,30 @@ describe Cinema::Movie do
     end
     it 'incorrect genre' do
       expect { subject.has_genre?('Actn') }.to raise_error(RuntimeError,'Incorrect genre!')
+    end
+  end
+
+  context 'new_data methods' do
+    before do
+      allow(dbl).to receive_messages(img_base: tmdb_data)
+      
+    end
+    describe '.rus_title' do
+      it 'returns russian title' do
+        expect(subject.rus_title).to eq('Побег из Шоушенка')
+      end
+    end
+
+    describe '.img_url' do
+      it 'returns image URL' do
+        expect(subject.img_url).to match(%r{http://image.tmdb.org/t/p/w154/[A-Za-z0-9]*.jpg})
+      end
+    end
+    
+    describe '.budget' do
+      it 'returns movie budget' do
+        expect(subject.budget).to eq('$25,000,000')
+      end
     end
   end
 end
