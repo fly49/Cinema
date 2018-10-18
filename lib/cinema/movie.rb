@@ -1,12 +1,13 @@
 require 'virtus'
-require_relative 'get_budget'
 
+# Movie's gerne contains several genres
 class ArrOfStr < Virtus::Attribute
   def coerce(value)
     value.split(',')
   end
 end
 
+# Movie's duration stores in minutes
 class Minutes < Virtus::Attribute
   def coerce(value)
     value.chomp(' min').to_i
@@ -14,7 +15,7 @@ class Minutes < Virtus::Attribute
 end
 
 module Cinema
-  # Movie contains information about specific movie and provides it in convinient form.
+  # Contains information about specific movie and provides it in convinient form
   class Movie
     include Virtus.model
 

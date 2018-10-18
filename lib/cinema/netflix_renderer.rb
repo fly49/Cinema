@@ -5,7 +5,7 @@ module Cinema
     attr_reader :template
 
     def initialize(netflix)
-      @template = File.read('page.haml')
+      @template = File.read('data/page.haml')
       @netflix = netflix
     end
 

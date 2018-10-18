@@ -1,4 +1,4 @@
-require_relative 'movie_collection'
+require 'cinema/movie_collection'
 
 module Cinema
   class Netflix < MovieCollection

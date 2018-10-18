@@ -1,15 +1,16 @@
-require 'netflix'
+require 'spec_helper'
+require 'cinema/netflix'
+require 'cinema/netflix_renderer'
 require 'rspec-html-matchers'
-require 'netflix_renderer'
 
 describe Cinema::NetflixRenderer do
   include RSpecHtmlMatchers
   before do
-    netflix = Cinema::Netflix.new('movies.txt')
-    Cinema::NetflixRenderer.new(netflix).render_to('html_pages/page.html')
+    netflix = Cinema::Netflix.new('data/movies.txt')
+    Cinema::NetflixRenderer.new(netflix).render_to('data/html_pages/page.html')
   end
 
-  let(:rendered) { open('html_pages/page.html').read }
+  let(:rendered) { open('data/html_pages/page.html').read }
   it 'should contain columns with movie attributes' do
     expect(rendered).to have_tag('tr') do
       with_tag 'td', text: 'Title:'

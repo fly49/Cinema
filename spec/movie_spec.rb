@@ -1,4 +1,5 @@
-require 'movie_collection'
+require 'spec_helper'
+require 'cinema/movie_collection'
 require 'rspec/its'
 
 describe Cinema::Movie do
@@ -19,7 +20,8 @@ describe Cinema::Movie do
                       'Побег из Шоушенка',
                       'http://image.tmdb.org/t/p/w154/sRBNv6399ZpCE4RrM8tRsDLSsaG.jpg'] }
   end
-  let(:dbl) { double(Cinema::MovieCollection.new('movies.txt')) }
+  let(:budget_data) { {'tt0111161' => '$25,000,000'} }
+  let(:dbl) { double(Cinema::MovieCollection.new('data/movies.txt')) }
   subject { Cinema::Movie.new(data, dbl) }
 
   describe 'it has been instantiated properly' do
@@ -47,6 +49,7 @@ describe Cinema::Movie do
   context 'new_data methods' do
     before do
       allow(dbl).to receive_messages(img_base: tmdb_data)
+      allow(dbl).to receive_messages(budget_base: budget_data)
     end
     describe '.rus_title' do
       it 'returns russian title' do
@@ -117,7 +120,7 @@ describe 'specified movies' do
       director: 'Pete Docter',
       cast: 'Amy Poehler,Bill Hader,Lewis Black' }
   end
-  let(:dbl) { double(Cinema::MovieCollection.new('movies.txt')) }
+  let(:dbl) { double(Cinema::MovieCollection.new('data/movies.txt')) }
   let(:ancient_movie) { Cinema::Movie.create(ancient_movie_data, dbl) }
   let(:classic_movie) { Cinema::Movie.create(classic_movie_data, dbl) }
   let(:modern_movie) { Cinema::Movie.create(modern_movie_data, dbl) }

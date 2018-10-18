@@ -1,8 +1,9 @@
-require 'movie_collection'
+require 'spec_helper'
+require 'cinema/movie_collection'
 require 'rspec/its'
 
 describe Cinema::MovieCollection do
-  subject { Cinema::MovieCollection.new('movies.txt') }
+  subject { Cinema::MovieCollection.new('data/movies.txt') }
 
   describe 'it has been instantiated' do
     its(:all) { is_expected.to all be_a Cinema::Movie }

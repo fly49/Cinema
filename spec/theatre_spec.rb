@@ -1,9 +1,9 @@
-require 'theatre'
-require 'rspec/its'
+require 'spec_helper'
+require 'cinema/theatre'
 
 describe Cinema::Theatre do
   let(:theatre) do
-    Cinema::Theatre.new('movies.txt') do
+    Cinema::Theatre.new('data/movies.txt') do
       hall :red, title: 'Красный зал', places: 100
       hall :blue, title: 'Синий зал', places: 50
       hall :green, title: 'Зелёный зал (deluxe)', places: 12
@@ -38,9 +38,9 @@ describe Cinema::Theatre do
     end
   end
 
-  let(:theatre_without_block) { Cinema::Theatre.new('movies.txt') }
+  let(:theatre_without_block) { Cinema::Theatre.new('data/movies.txt') }
   let(:theatre_overlapped) do
-    Cinema::Theatre.new('movies.txt') do
+    Cinema::Theatre.new('data/movies.txt') do
       hall :red, title: 'Красный зал', places: 100
       hall :blue, title: 'Синий зал', places: 50
       hall :green, title: 'Зелёный зал (deluxe)', places: 12

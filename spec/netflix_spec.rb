@@ -1,8 +1,9 @@
-require 'netflix'
+require 'spec_helper'
+require 'cinema/netflix'
 require 'rspec/its'
 
 describe Cinema::Netflix do
-  let(:netflix) { Cinema::Netflix.new('movies.txt') }
+  let(:netflix) { Cinema::Netflix.new('data/movies.txt') }
 
   describe '.pay' do
     it { expect { netflix.pay(5) }.to change { netflix.account }.by 5 }

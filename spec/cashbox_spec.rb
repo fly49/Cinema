@@ -1,8 +1,8 @@
-require 'cashbox'
-require 'rspec/its'
+require 'spec_helper'
+require 'cinema/cashbox'
 
-describe Cashbox do
-  let(:dummy_class) { Class.new { include Cashbox } }
+describe Cinema::Cashbox do
+  let(:dummy_class) { Class.new { include Cinema::Cashbox } }
   subject { dummy_class.new }
 
   describe '.cash' do

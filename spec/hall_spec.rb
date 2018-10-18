@@ -1,9 +1,10 @@
-require 'theatre'
+require 'spec_helper'
+require 'cinema/theatre'
 require 'rspec/its'
 
 describe Cinema::Theatre::Hall do
   let(:theatre) do
-    Cinema::Theatre.new('movies.txt') do
+    Cinema::Theatre.new('data/movies.txt') do
       hall :red, title: 'Красный зал', places: 100
     end
   end

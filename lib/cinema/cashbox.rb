@@ -1,7 +1,8 @@
 require 'money'
-I18n.enforce_available_locales = false
+I18n.enforce_available_locales = false  # money gem requires it
   
 module Cinema
+  # Imitates cinema's owner credit account
   module Cashbox
     def cash
       @cash ||= Money.new(0, 'USD')
