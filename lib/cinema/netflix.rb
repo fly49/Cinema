@@ -1,4 +1,5 @@
 require 'cinema/movie_collection'
+require 'haml'
 
 module Cinema
   class Netflix < MovieCollection
@@ -74,6 +75,13 @@ module Cinema
       filters.reduce(@database) do |f_data, (key, val)|
         f_data.select { |movie| matches_filter?(movie, key, val) }
       end
+    end
+    
+    def render_to(file_name)
+      template = File.read('data/page.haml')
+      haml_engine = Haml::Engine.new(template)
+      output = haml_engine.render(Object.new, netflix: self)
+      File.write(file_name, output)
     end
 
     private

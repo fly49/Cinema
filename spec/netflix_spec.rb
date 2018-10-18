@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'cinema/netflix'
 require 'rspec/its'
+require 'rspec-html-matchers'
 
 describe Cinema::Netflix do
   let(:netflix) { Cinema::Netflix.new('data/movies.txt') }
@@ -131,6 +132,29 @@ describe Cinema::Netflix do
     end
     it 'should raise error if entered genre is incorrect' do
       expect { netflix.by_country.jpan }.to raise_error(RuntimeError, 'No film from such country was found.')
+    end
+  end
+  
+  describe '.render_to' do
+    include RSpecHtmlMatchers
+    before { netflix.render_to('data/html_pages/page.html') }
+    let(:rendered) { open('data/html_pages/page.html').read }
+    it 'should contain columns with movie attributes' do
+      expect(rendered).to have_tag('tr') do
+        with_tag 'td', text: 'Title:'
+        with_tag 'td', text: 'Year:'
+        with_tag 'td', text: 'Country:'
+        with_tag 'td', text: 'Date:'
+        with_tag 'td', text: 'Genre:'
+        with_tag 'td', text: 'Duration:'
+        with_tag 'td', text: 'Director:'
+        with_tag 'td', text: 'Budget:'
+        with_tag 'td', text: 'Rating:'
+        with_tag 'td', text: 'Cast:'
+      end
+    end
+    it 'should support UTF-8' do
+      expect(rendered).to have_tag('meta', with: { charset: 'UTF-8' })
     end
   end
 end
