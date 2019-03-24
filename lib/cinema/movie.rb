@@ -21,6 +21,7 @@ module Cinema
 
     attribute :link, String
     attribute :title, String
+    attribute :rus_title, String
     attribute :year, Integer
     attribute :country, String
     attribute :date, String
@@ -29,27 +30,24 @@ module Cinema
     attribute :rating, Float
     attribute :director, String
     attribute :cast, ArrOfStr
+    attribute :img_url, String
+    attribute :budget, String
 
-    def self.create(hash, collection)
-      case hash[:year].to_i
+    def self.create(attr_hash)
+      case attr_hash[:year].to_i
       when 1900..1945
-        AncientMovie.new(hash, collection)
+        AncientMovie.new(attr_hash)
       when 1945..1968
-        ClassicMovie.new(hash, collection)
+        ClassicMovie.new(attr_hash)
       when 1968..2000
-        ModernMovie.new(hash, collection)
+        ModernMovie.new(attr_hash)
       else
-        NewMovie.new(hash, collection)
+        NewMovie.new(attr_hash)
       end
     end
 
-    def initialize(params,collection)
-      @collection = collection
-      super params
-    end
-
-    def to_s
-      "#{@title} (#{@date}; #{@genre}) - #{@duration}"
+    def initialize(attr_hash)
+      super attr_hash
     end
 
     def imdb_id
@@ -64,24 +62,9 @@ module Cinema
       self.class.name.split('::').last.chomp('Movie').downcase.to_sym
     end
 
-    def rus_title
-      @collection.img_base.dig(imdb_id,1)
-    end
-
-    def img_url
-      @collection.img_base.dig(imdb_id,2)
-    end
-
-    def budget
-      @collection.budget_base[imdb_id]
-    end
-
-    # rubocop:disable Naming/PredicateName
     def has_genre?(str)
-      raise('Incorrect genre!') unless @collection.genres.include?(str)
       @genre.include?(str)
     end
-    # rubocop:enable Naming/PredicateName
   end
 
   class AncientMovie < Movie
@@ -92,14 +75,13 @@ module Cinema
 
   class ClassicMovie < Movie
     def to_s
-      count = @collection.stats(:director).fetch(@director)
-      "«#{@title}» - Classic Movie, director: #{@director} (#{count} more movie#{count > 1 ? '' : 's'} in the list)."
+      "«#{@title}» - Classic Movie, director: #{@director}."
     end
   end
 
   class ModernMovie < Movie
     def to_s
-      "«#{@title}» - Modern Movie: starring #{@cast}."
+      "«#{@title}» - Modern Movie: starring #{@cast.join(", ")}."
     end
   end
 

@@ -4,8 +4,10 @@ require 'rspec/its'
 
 describe Cinema::Movie do
   let(:data) do
-    { link: 'http://imdb.com/title/tt0111161/?ref_=chttp_tt_1',
+    { 
+      link: 'http://imdb.com/title/tt0111161/?ref_=chttp_tt_1',
       title: 'The Shawshank Redemption',
+      rus_title: 'Побег из Шоушенка',
       year: '1994',
       country: 'USA',
       date: '1994-10-14',
@@ -13,16 +15,12 @@ describe Cinema::Movie do
       duration: '142 min',
       rating: '9.3',
       director: 'Frank Darabont',
-      cast: 'Tim Robbins,Morgan Freeman,Bob Gunton' }
+      cast: 'Tim Robbins,Morgan Freeman,Bob Gunton',
+      budget: '$25,000,000',
+      img_url: 'http://image.tmdb.org/t/p/w154/sRBNv6399ZpCE4RrM8tRsDLSsaG.jpg'
+    }
   end
-  let(:tmdb_data) do
-    { 'tt0111161' => ['The Shawshank Redemption',
-                      'Побег из Шоушенка',
-                      'http://image.tmdb.org/t/p/w154/sRBNv6399ZpCE4RrM8tRsDLSsaG.jpg'] }
-  end
-  let(:budget_data) { {'tt0111161' => '$25,000,000'} }
-  let(:dbl) { double(Cinema::MovieCollection.new('data/movies.txt')) }
-  subject { Cinema::Movie.new(data, dbl) }
+  subject { Cinema::Movie.new(data) }
 
   describe 'it has been instantiated properly' do
     its(:link) { is_expected.to match(%r{imdb.com\/title(.*)}) }
@@ -32,25 +30,15 @@ describe Cinema::Movie do
   end
 
   describe '.has_genre?' do
-    before do
-      allow(dbl).to receive_messages(genres: %w[Drama Action Crime])
-    end
     it 'movie has this genre' do
       expect(subject.has_genre?('Drama')).to be true
     end
     it "movie hasn't this genre" do
       expect(subject.has_genre?('Action')).to be false
     end
-    it 'incorrect genre' do
-      expect { subject.has_genre?('Actn') }.to raise_error(RuntimeError,'Incorrect genre!')
-    end
   end
 
   context 'new_data methods' do
-    before do
-      allow(dbl).to receive_messages(img_base: tmdb_data)
-      allow(dbl).to receive_messages(budget_base: budget_data)
-    end
     describe '.rus_title' do
       it 'returns russian title' do
         expect(subject.rus_title).to eq('Побег из Шоушенка')
@@ -120,11 +108,11 @@ describe 'specified movies' do
       director: 'Pete Docter',
       cast: 'Amy Poehler,Bill Hader,Lewis Black' }
   end
-  let(:dbl) { double(Cinema::MovieCollection.new('data/movies.txt')) }
-  let(:ancient_movie) { Cinema::Movie.create(ancient_movie_data, dbl) }
-  let(:classic_movie) { Cinema::Movie.create(classic_movie_data, dbl) }
-  let(:modern_movie) { Cinema::Movie.create(modern_movie_data, dbl) }
-  let(:new_movie) { Cinema::Movie.create(new_movie_data, dbl) }
+
+  let(:ancient_movie) { Cinema::Movie.create(ancient_movie_data) }
+  let(:classic_movie) { Cinema::Movie.create(classic_movie_data) }
+  let(:modern_movie) { Cinema::Movie.create(modern_movie_data) }
+  let(:new_movie) { Cinema::Movie.create(new_movie_data) }
 
   it 'has been instantiated as specified movie' do
     expect(ancient_movie).to be_a Cinema::AncientMovie
@@ -134,9 +122,6 @@ describe 'specified movies' do
   end
 
   describe '.to_s' do
-    before do
-      allow(dbl).to receive_messages(stats: { 'Akira Kurosawa' => 3 })
-    end
     it 'prints as AncientMovie' do
       expect(ancient_movie.to_s).to match(/Old Movie/)
     end

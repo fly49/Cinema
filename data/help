@@ -1,0 +1,29 @@
+netflix:
+  list [genre/country]
+  e.g.: list comedy => #netflix.by_genre.comedy
+        list USA => #netflix.by_genre.usa
+
+  pay [amount of dollars]$
+    #pay
+
+  price "[movie title]"
+    #how_much?
+
+  find_by
+      [!]title: "[movie title]"     
+      e.g.: !title: "Terminator" => #!movie.title.include?('Terminator')
+      
+      [!]year: [<>] [year]
+                    [year_1]..[year_2]
+      e.g.: year: 2010        => #movie.year == 2010
+            year: > 2003      => #movie.year > 2003
+            year: < 2007      => #movie.year < 2007
+            year: 1960..1980  => #((1960..1980) === movie.year)
+      
+      [!]country: "[country_name]"
+      e.g.: country: "France" => #movie.country.include?('France')
+      
+      [!]genre: "[genre_name]"
+      e.g.: genre: "Action" => #movie.genre.include?('Action')
+                    
+    movie.genre.include?('Action')

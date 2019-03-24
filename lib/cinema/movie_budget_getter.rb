@@ -6,32 +6,29 @@ require 'open_uri_redirections'
 module Cinema
   class MovieBudgetGetter
     class << self
-      def get_budget(movie)
-        page = Nokogiri::HTML(get_page(movie))
+      def get_budget(id)
+        page = Nokogiri::HTML(get_page(id))
         fetch_budget(page)
       end
     
-      def get_all_budgets(movies)
-        return if File.exist?('data/budgets.yml')
-        @budgets = movies.each_with_object({}) do |movie, hash|
-          hash[movie.imdb_id] = get_budget(movie)
+      def get_all_budgets(ids)
+        return if File.exist?('data/extra_data.yml')
+        @budgets = ids.each_with_object({}) do |id, hash|
+          hash[id] = { 'budget' => get_budget(id) }
         end
-        self
-      end
-    
-      def save(path)
-        File.write(path,@budgets.to_yaml)
         FileUtils.rm_r Dir.glob('data/movie_pages')
+        @budgets
       end
     
       private
     
-      def get_page(movie)
-        cache_file_path = "data/movie_pages/#{movie.imdb_id}.html"
+      def get_page(id)
+        cache_file_path = "data/movie_pages/#{id}.html"
         return File.read(cache_file_path) if File.exist?(cache_file_path)
         dirname = File.dirname(cache_file_path)
         FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
-        open(movie.link, allow_redirections: :safe).read
+        movie_link = "http://imdb.com/title/#{id}/"
+        open(movie_link, allow_redirections: :safe).read
                                                    .tap { |response| File.write(cache_file_path, response) }
       end
     

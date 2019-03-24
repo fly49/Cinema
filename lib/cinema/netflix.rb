@@ -1,5 +1,6 @@
-require 'cinema/movie_collection'
+require_relative 'movie_collection'
 require 'haml'
+require 'damerau-levenshtein'
 
 module Cinema
   class Netflix < MovieCollection
@@ -13,6 +14,9 @@ module Cinema
       @filters = {}
     end
 
+    ### Chainable genre sorting
+    # Example:
+    # netflix.by_genre.comedy => get list of all comedies
     class GenreSorting
       def initialize(genres,collection)
         genres.each do |defined_genre|
@@ -26,7 +30,13 @@ module Cinema
         raise "Incorrect genre \"#{name}\"."
       end
     end
+    def by_genre
+      GenreSorting.new(@genres,self)
+    end
 
+    ### Chainable country sorting
+    # Example:
+    # netflix.by_country.usa => get list of all usa films
     class CountrySorting
       def initialize(collection)
         @collection = collection
@@ -38,19 +48,16 @@ module Cinema
         result.empty? ? raise('No film from such country was found.') : result
       end
     end
-
-    def by_genre
-      GenreSorting.new(@genres,self)
-    end
-
     def by_country
       CountrySorting.new(self)
     end
 
+    # Refill account
     def pay(amount)
       @account += amount
     end
 
+    # Get movie price
     def how_much?(name)
       PRICE[find(name).class.name.split('::').last.to_sym]
     end
@@ -63,20 +70,23 @@ module Cinema
         filters.store(name,block)
       end
     end
-
-    def show(**filters, &block)
-      movie = filter(filters).select(&block)
-                             .max_by { |m| m.rating * rand }
-      withdraw_money(movie.title)
-      super movie
-    end
-
+    
     def filter(**filters)
       filters.reduce(@database) do |f_data, (key, val)|
         f_data.select { |movie| matches_filter?(movie, key, val) }
       end
     end
     
+    def find(**filters, &block)
+      filter(filters).select(&block).sort_by(&:rating).reverse
+    end
+
+    def show(title)
+      movie = @database.find { |f| f.title == name }
+      movie ? withdraw_money(movie) : suggest(title)
+    end
+
+    # Render IMDB list to HTML file
     def render_to(file_name)
       template = File.read('data/page.haml')
       haml_engine = Haml::Engine.new(template)
@@ -85,6 +95,12 @@ module Cinema
     end
 
     private
+    
+    def suggest(mis_title)
+      @database.map(&:title).min_by do |title|
+        DamerauLevenshtein.distance(title, mis_title)
+      end
+    end
 
     def matches_filter?(movie,key,val)
       if filters[key]
@@ -96,8 +112,8 @@ module Cinema
       end
     end
 
-    def withdraw_money(movie_title)
-      movie_price = how_much?(movie_title)
+    def withdraw_money(movie)
+      movie_price = how_much?(movie.title)
       raise('Not enough funds!') if @account < movie_price
       @account -= movie_price
       Netflix.add_money(movie_price)

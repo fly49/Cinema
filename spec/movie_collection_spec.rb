@@ -9,7 +9,6 @@ describe Cinema::MovieCollection do
     its(:all) { is_expected.to all be_a Cinema::Movie }
     its(:genres) { is_expected.to be_an Array }
     it { expect(subject.all.count).to eq 250 }
-    it { expect(subject.img_base.keys).to all match(/tt\d{5,7}/) }
   end
 
   describe '.sort_by' do
@@ -24,7 +23,7 @@ describe Cinema::MovieCollection do
     context 'Duration sorting' do
       it {  expect(subject.sort_by(:duration).first(3).map(&:to_s)).to eq(['«The General» - Old Movie (1926).',
                                                                            '«The Kid» - Old Movie (1921).',
-                                                                           '«Before Sunset» - Brand-new Movie! Released 14 year ago.'])}
+                                                                           '«Before Sunset» - Brand-new Movie! Released 15 year ago.'])}
     end
   end
 
@@ -70,15 +69,6 @@ describe Cinema::MovieCollection do
     end
     context 'Combined filtering' do
       it { expect(subject.filter(genre: 'Animation', year: 2000..2005)).to all(have_attributes(genre: include('Animation'), year: 2001..2005)) }
-    end
-  end
-
-  describe '.find' do
-    context 'Wrong name' do
-      it { expect { subject.find('abcd') }.to raise_error(RuntimeError,'Movie not found!') }
-    end
-    context 'Right format' do
-      it { expect(subject.find('The Matrix')).to be_a Cinema::Movie }
     end
   end
 end

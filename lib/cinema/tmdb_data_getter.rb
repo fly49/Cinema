@@ -6,19 +6,13 @@ module Cinema
   class TmdbDataGetter
     class << self
     
-      def fetch_all(movies)
-        return if File.exist?('data/tmdb_base.yml')
+      def fetch_all(ids)
+        return if File.exist?('data/extra_data.yml')
         configure
-        @tmdb_base = movies.each_with_object({}) do |movie, hash|
-          id = movie.link.match(/tt\d{5,7}/).to_s
-          sleep(0.25)
+        @tmdb_base = ids.each_with_object({}) do |id, hash|
           hash[id] = fetch_one(id)
+          sleep(0.25)
         end
-        self
-      end
-    
-      def save(path)
-        File.write(path,@tmdb_base.to_yaml)
       end
       
       private
@@ -26,7 +20,7 @@ module Cinema
       def fetch_one(imdb_id)
         movie = Tmdb::Find.movie(imdb_id, external_source: 'imdb_id', language: 'ru').first
         poster_path = @config.images.base_url + @config.images.poster_sizes[1] + movie.poster_path
-        [movie.original_title, movie.title, poster_path]
+        { 'rus_title' => movie.title, 'img_url' => poster_path }
       end
       
       def configure

@@ -1,9 +1,9 @@
 require 'csv'
 require 'date'
-require 'cinema/movie'
-require 'cinema/cashbox'
-require 'cinema/tmdb_data_getter'
-require 'cinema/movie_budget_getter'
+require_relative 'movie'
+require_relative 'cashbox'
+require_relative 'tmdb_data_getter'
+require_relative 'movie_budget_getter'
 
 module Cinema
   # Contains information about top-250 imdb movies and allow to choose specific ones in different ways
@@ -13,20 +13,38 @@ module Cinema
     attr_reader :genres, :img_base, :budget_base
     TABLE = %I[link title year country date genre duration rating director cast].freeze
 
-    # MovieCollection initializes via text file, that contains all information about each film
+    # MovieCollection initializes via text file, that contains information about each film
     def initialize(name)
       raise("File doesn't exist!") unless File.file?(name)
-      @database = CSV.read(name, col_sep: '|', headers: TABLE).map { |a| Movie.create(a.to_hash, self) }
-      
-      # Download posters paths
-      TmdbDataGetter.fetch_all(@database).save('data/tmdb_base.yml') unless File.exist?('data/tmdb_base.yml')
-      @img_base = YAML.parse(File.open('data/tmdb_base.yml')).transform
-      
-      # Extract information about budgets
-      MovieBudgetGetter.get_all_budgets(@database).save('data/budgets.yml') unless File.exist?('data/budgets.yml')
-      @budget_base = YAML.parse(File.open('data/budgets.yml')).transform
-      
+      # Parse txt file into CSV-row objects
+      csv_rows = CSV.read(name, col_sep: '|', headers: TABLE)
+      # Parse IMDB ids to an array
+      ids = csv_rows.map { |row| get_id(row) }
+      # Get posters URLs and budgets
+      parse_extra_data(ids) unless File.exist?('data/extra_data.yml')
+      extra_data = YAML.parse(File.open('data/extra_data.yml')).transform
+      # Create database based both on txt and extra data
+      @database = csv_rows.map do |row|
+        id = get_id(row)
+        attr_hash = row.to_hash.merge(extra_data[id])
+        Movie.create(attr_hash)
+      end
+      # Store list of genres
       @genres = @database.flat_map(&:genre).uniq
+    end
+    
+    def parse_extra_data(ids)
+      # Download posters URL's
+      img_hash = TmdbDataGetter.fetch_all(ids)
+      # Parse budgets
+      budgets_hash = MovieBudgetGetter.get_all_budgets(ids)
+      # Incorporate into extra data
+      extra_data = img_hash.merge(budgets_hash) { |key, oldval, newval| oldval.merge(newval) }
+      File.write('data/extra_data.yml',extra_data.to_yaml)
+    end
+    
+    def get_id(csv_row)
+      csv_row.field(:link).match(/tt\d{5,7}/).to_s
     end
 
     def each(&block)
@@ -35,17 +53,6 @@ module Cinema
 
     def all
       @database
-    end
-
-    def find(name)
-      @database.find { |f| f.title == name } || raise('Movie not found!')
-    end
-
-    def show(movie)
-      start_at = Time.now.strftime('%H:%M')
-      end_at = (Time.now + movie.duration * 60).strftime('%H:%M')
-      puts "Now showing: «#{movie.title}» #{start_at} - #{end_at}"
-      movie
     end
 
     def sort_by(param)
